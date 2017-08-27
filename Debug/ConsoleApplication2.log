@@ -1,5 +1,5 @@
-﻿  main.c
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\datastructure.h(175): warning C4098: “setDoubleCharArray”:“void”函数返回值
+﻿G:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: 中间目录(Debug\)包含从另一个项目(Logistics-Manager.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+  main.c
 c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(20): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
 c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(21): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
@@ -72,44 +72,50 @@ c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleap
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
 c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(155): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(174): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(176): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(173): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(173): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(175): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(172): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(175): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(174): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(168): warning C4101: “StrLin”: 未引用的局部变量
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(275): warning C4133: “return”: 从“car *”到“site *”的类型不兼容
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(343): warning C4477: “printf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“int”
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(343): warning C4474: printf: 格式字符串中传递的参数太多
-  c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\listtool.h(343): note: 占位符和其参数预计 1 可变参数，但提供的却是 2 参数
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(79): warning C4133: “=”: 从“good *”到“good *”的类型不兼容
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(28): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(23): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1272): note: 参见“scanf”的声明
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(29): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1272): note: 参见“scanf”的声明
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(34): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1272): note: 参见“scanf”的声明
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(39): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1272): note: 参见“scanf”的声明
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(45): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1272): note: 参见“scanf”的声明
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(77): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: 参见“fopen”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(42): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(91): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(43): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(92): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(93): note: 参见“strcat”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(44): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(93): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(93): note: 参见“strcat”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(45): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(94): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: 参见“fopen”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(57): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(106): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(58): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(107): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(93): note: 参见“strcat”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(59): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(108): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(93): note: 参见“strcat”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(60): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(109): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: 参见“fopen”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(70): warning C4133: “初始化”: 从“site *”到“car *”的类型不兼容
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(71): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(120): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: 参见“strcpy”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(72): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(121): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(93): note: 参见“strcat”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(73): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(122): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(93): note: 参见“strcat”的声明
-c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(74): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(123): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: 参见“fopen”的声明
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(209): warning C4133: “函数”: 从“char [34]”到“FILE *const ”的类型不兼容
+c:\users\xgl\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\main.c(207): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: 参见“fopen”的声明
   ConsoleApplication2.vcxproj -> C:\Users\Xgl\documents\visual studio 2017\Projects\ConsoleApplication2\Debug\ConsoleApplication2.exe
   ConsoleApplication2.vcxproj -> C:\Users\Xgl\documents\visual studio 2017\Projects\ConsoleApplication2\Debug\ConsoleApplication2.pdb (Partial PDB)

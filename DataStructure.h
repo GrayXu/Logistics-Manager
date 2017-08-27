@@ -1,5 +1,5 @@
 #include <stdlib.h>
-void setDoubleCharArray(char** out, char* in);
+char** setDoubleCharArray(char** out, char* in);
 /**
 * 货物的基本信息：*Type : 装货、卸货的货物的种类
 *                  *Volume	: 货物所占容量，（单位立方米）
@@ -34,7 +34,7 @@ typedef struct Car {
 	char routeID[7];
 	char driverName[9];
 	char driverTel[12];
-	struct good * good;
+	good * good;
 	struct Car * next;
 } car;
 
@@ -150,10 +150,10 @@ void freeDoubleCharArray(int num, char ** info) {
 }
 
 //将一维字符数组的内容切分至已经开好空间的二维字符数组中去。
-void setDoubleCharArray(char** out, char* in) {
+char** setDoubleCharArray(char** out, char* in) {
 	if (out == NULL) {
 		printf("空间开辟失败\n");
-		return;
+		return NULL;
 	}
 	register int allIndex = 0;
 	register int outIndex = 0;

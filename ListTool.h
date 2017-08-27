@@ -165,7 +165,6 @@ car * creatCarList(FILE * fText) {
 //创建货物信息，并将指针返回出外部
 good* creatGood(FILE * fText) {
 	good* goodP = (good *)malloc(sizeof(good));
-	char StrLin[200];
 	char StrLine[200];
 	fgets(StrLine, 200, fText);
 	char ** info = readGood(StrLine);
@@ -257,7 +256,7 @@ site *getSitePointer(site *pHead, int pos) {
 	}
 	return pNode;
 }
-site *getCarPointer(car *pHead, int pos) {
+car *getCarPointer(car *pHead, int pos) {
 
 	if (pHead == NULL) {
 		return NULL;
@@ -312,19 +311,16 @@ route* AddPos(route *pNode, int pos) {
 	return pNew;
 }
 
-/* 从单链表中删除第pos个结点(兼容头尾), @return: successful is return 1.*/
-int DelPos(route *pNode, int pos) {
-	route *pHead = pNode;
-	route *pTmp = pNode;
-	
-
+/* 从单链表中删除第pos个结点(兼容头尾), @return: the new head pointer.*/
+route* DelRoutePos(route *HeadP, int pos) {
+	route *pHead = HeadP;
+	route *pTmp = HeadP;//pTmep即为被删除结点的前一个结点
 	//防空指针
 	if (NULL == pHead) {
 		printf("DelPos函数执行，链表为空\n");
-		return 0;
+		return NULL;
 	}
-
-	int i = 0;
+	register int i = 0;
 	while (pHead != NULL) {
 		if (i == pos)
 			break;
@@ -332,20 +328,18 @@ int DelPos(route *pNode, int pos) {
 		pHead = pHead->next;
 		++i;
 	}
-
-	if (i==0) {
+	if (i==0) {//即删除头结点
+		route * returnP = pHead->next;
 		free(pHead);
-		return 1;
+		return returnP;
 	}
-
 	pTmp->next = pHead->next;
 	free(pHead);
-	printf("DelPos函数执行成功，删除的节点ID为数值%s\n", pos, pHead->routeID);
-	return 1;
+	return pHead;
 }
 
 /* 交换2个元素的位置，记得检测头是否改变 */
-void swap(route **ppNode, int posA, int posB) {
+void swapRoute(route **ppNode, int posA, int posB) {
 	route *node = *ppNode;
 	int i;
 	route *preAp = NULL;
@@ -390,5 +384,4 @@ void swap(route **ppNode, int posA, int posB) {
 		Bp->next = tempP;
 		preAp->next = Bp;
 	}
-
 }
