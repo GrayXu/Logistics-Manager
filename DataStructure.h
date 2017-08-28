@@ -69,7 +69,7 @@ typedef struct Site {
 	float d2Last;
 	float time2Last;
 	float waitTime;
-	char routeIDArray[100];
+	char routeIDArray[50];
 	struct Car * carHeadP;
 	struct Site * next;
 
@@ -85,7 +85,7 @@ char** readSite(char* in) {
 	strArray[5] = (char*)malloc(sizeof(char) * 11);
 	strArray[6] = (char*)malloc(sizeof(char) * 11);
 	strArray[7] = (char*)malloc(sizeof(char) * 11);
-	strArray[8] = (char*)malloc(sizeof(char) * 50);
+	strArray[8] = (char*)malloc(sizeof(char) * 51);
 	setDoubleCharArray(strArray, in);
 	return strArray;
 }

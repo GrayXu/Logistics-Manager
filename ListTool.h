@@ -63,7 +63,7 @@ route *creatRouteList(FILE* fText) {
 	return pReturn;
 }
 
-//路线的站点信息（链表）， 返回指向该路线的第一个站点的指针，
+//创建信息链表，返回指向该路线的第一个站点的指针，
 //从而外部可以将站点连接上路线结点
 site * creatSiteList(FILE* fText) {
 
@@ -116,8 +116,6 @@ site * creatSiteList(FILE* fText) {
 	}
 	return pReturn;
 }
-
-//车辆信息链表，返回第一个车辆的指针
 car * creatCarList(FILE * fText) {
 
 	car *carP, *pReturn;
@@ -161,8 +159,6 @@ car * creatCarList(FILE * fText) {
 	}
 	return pReturn;
 }
-
-//创建货物信息，并将指针返回出外部
 good* creatGood(FILE * fText) {
 	good* goodP = (good *)malloc(sizeof(good));
 	char StrLine[200];
@@ -275,38 +271,37 @@ car *getCarPointer(car *pHead, int pos) {
 }
 
 /* 向单链表中第pos个结点位置插入元素为x的结点(把该位置的往后挤)，若插入成功返回新结点的指针，否则返回NULL*/
-route* AddPos(route *pNode, int pos) {
-	route *pHead = pNode;
-	route *pPre = pNode;//both set to the first
+route* AddRouteNode(route *HEAD, int pos) {
+	route *pHead = HEAD;
+	route *pPre = HEAD;//both set to the first( init)
 	route *pNew = NULL;
 	int i = 0;
-
-	if (NULL == pHead) {
-		printf("AddPos函数执行，链表为空\n");
-		return NULL;
-	}
-
-	while (pHead != NULL) {
-		if (i == pos)
-			break;
-		pPre = pHead;
-		pHead = pHead->next;
-		++i;
-	}
-
 	pNew = (route *)malloc(sizeof(route));
+
 	if (pPre == NULL) {
-		printf("heap is full.");
 		return NULL;//error
 	}
-	if (i==0) {//add to the first one
-		pNew->next = pNode;
-	} else if (pHead->next == NULL) {//add to the last one
-		pHead->next = pNew;
+	if (NULL == pHead) {
+		return NULL;//error
+	}
+
+	if (pos == 0) {//add to be the first one
+		pNew->next = HEAD;
+	} else if (pos == sizeRouteList(HEAD)) {//add to be the last one
+		route * lastRouteP = getRoutePointer(HEAD, pos - 1);
+		lastRouteP->next = pNew;
 		pNew->next = NULL;
 	} else {
+		while (pHead != NULL) {
+			if (i == pos)
+				break;
+			pPre = pHead;
+			pHead = pHead->next;
+			++i;
+		}
 		pPre->next = pNew;
 		pNew->next = pHead;
+
 	}
 	return pNew;
 }
@@ -329,13 +324,63 @@ route* DelRoutePos(route *HeadP, int pos) {
 		++i;
 	}
 	if (i==0) {//即删除头结点
-		route * returnP = pHead->next;
+		route * returnP = pHead->next;//返回第二个结点
 		free(pHead);
 		return returnP;
 	}
 	pTmp->next = pHead->next;
 	free(pHead);
-	return pHead;
+	return HeadP;
+}
+site* DelSitePos(site *HeadP, int pos) {
+	site *pHead = HeadP;
+	site *pTmp = HeadP;//pTmep即为被删除结点的前一个结点
+						//防空指针
+	if (NULL == pHead) {
+		printf("DelPos函数执行，链表为空\n");
+		return NULL;
+	}
+	register int i = 0;
+	while (pHead != NULL) {
+		if (i == pos)
+			break;
+		pTmp = pHead;
+		pHead = pHead->next;
+		++i;
+	}
+	if (i == 0) {//即删除头结点
+		route * returnP = pHead->next;//返回第二个结点
+		free(pHead);
+		return returnP;
+	}
+	pTmp->next = pHead->next;
+	free(pHead);
+	return HeadP;
+}
+car* DelCarPos(car *HeadP, int pos) {
+	car *pHead = HeadP;
+	car *pTmp = HeadP;//pTmep即为被删除结点的前一个结点
+					   //防空指针
+	if (NULL == pHead) {
+		printf("DelPos函数执行，链表为空\n");
+		return NULL;
+	}
+	register int i = 0;
+	while (pHead != NULL) {
+		if (i == pos)
+			break;
+		pTmp = pHead;
+		pHead = pHead->next;
+		++i;
+	}
+	if (i == 0) {//即删除头结点
+		route * returnP = pHead->next;//返回第二个结点
+		free(pHead);
+		return returnP;
+	}
+	pTmp->next = pHead->next;
+	free(pHead);
+	return HeadP;
 }
 
 /* 交换2个元素的位置，记得检测头是否改变 */
