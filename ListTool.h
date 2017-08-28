@@ -1,11 +1,11 @@
-#include<stdio.h>
+ï»¿#include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 #include<DataStructure.h>
 
 /* CURD for routes */
 
-/* ´´½¨´¢´æÂ·ÏßÊı¾İµÄÏßĞÔ±í*/
+/* åˆ›å»ºå‚¨å­˜è·¯çº¿æ•°æ®çš„çº¿æ€§è¡¨*/
 route *creatRouteList(FILE* fText) {
 	if (feof(fText)) {
 		return NULL;
@@ -63,8 +63,8 @@ route *creatRouteList(FILE* fText) {
 	return pReturn;
 }
 
-//´´½¨ĞÅÏ¢Á´±í£¬·µ»ØÖ¸Ïò¸ÃÂ·ÏßµÄµÚÒ»¸öÕ¾µãµÄÖ¸Õë£¬
-//´Ó¶øÍâ²¿¿ÉÒÔ½«Õ¾µãÁ¬½ÓÉÏÂ·Ïß½áµã
+//åˆ›å»ºä¿¡æ¯é“¾è¡¨ï¼Œè¿”å›æŒ‡å‘è¯¥è·¯çº¿çš„ç¬¬ä¸€ä¸ªç«™ç‚¹çš„æŒ‡é’ˆï¼Œ
+//ä»è€Œå¤–éƒ¨å¯ä»¥å°†ç«™ç‚¹è¿æ¥ä¸Šè·¯çº¿ç»“ç‚¹
 site * creatSiteList(FILE* fText) {
 
 	site *siteP, *pReturn;
@@ -97,7 +97,7 @@ site * creatSiteList(FILE* fText) {
 			free(tempP);
 			break;
 		}
-		char ** info = readRoute(StrLine);//½øĞĞ×Ö·û´®ÇĞ·Ö²Ù×÷
+		char ** info = readRoute(StrLine);//è¿›è¡Œå­—ç¬¦ä¸²åˆ‡åˆ†æ“ä½œ
 
 		strcpy(tempP->routeID, info[0]);
 		tempP->siteSID = atoi(info[1]);
@@ -145,7 +145,7 @@ car * creatCarList(FILE * fText) {
 			free(tempP);
 			break;
 		}
-		char ** info = readCar(StrLine);//½øĞĞ×Ö·û´®ÇĞ·Ö²Ù×÷
+		char ** info = readCar(StrLine);//è¿›è¡Œå­—ç¬¦ä¸²åˆ‡åˆ†æ“ä½œ
 
 		strcpy(tempP->carID, info[0]);
 		strcpy(tempP->routeID, info[1]);
@@ -174,12 +174,12 @@ good* creatGood(FILE * fText) {
 	return goodP;
 }
 
-/* ´òÓ¡Á´±í£¬Á´±íµÄ±éÀú£¬TODO£ºĞèÒª×ö¸ñÊ½»¯£¬ĞèÒªÉî¶È±éÀú(±¨±í£¿£¿)*/
+/* æ‰“å°é“¾è¡¨ï¼Œé“¾è¡¨çš„éå†ï¼ŒTODOï¼šéœ€è¦åšæ ¼å¼åŒ–ï¼Œéœ€è¦æ·±åº¦éå†(æŠ¥è¡¨ï¼Ÿï¼Ÿ)*/
 void printList(route *pHead) {
 	// TODO
 }
 
-/* Çå¿Õµ¥Á´±í£¬TODO:   WARNING£ºĞèÒªÏÂ²ãÊÍ·ÅºóÔÙµ÷ÓÃ(Ê®×ÖÁ´±í) or Éî¶È±éÀú£¡£¡*/
+/* æ¸…ç©ºå•é“¾è¡¨ï¼ŒTODO:   WARNINGï¼šéœ€è¦ä¸‹å±‚é‡Šæ”¾åå†è°ƒç”¨(åå­—é“¾è¡¨) or æ·±åº¦éå†ï¼ï¼*/
 void clearList(route *pHead) {
 	route *pNext;
 
@@ -190,7 +190,7 @@ void clearList(route *pHead) {
 	}
 }
 
-/* ·µ»ØÁ´±íµÄ³¤¶È*/
+/* è¿”å›é“¾è¡¨çš„é•¿åº¦*/
 int sizeRouteList(route *pHead) {
 	int size = 0;
 	while (pHead != NULL) {
@@ -216,7 +216,7 @@ int sizeCarList(car *pHead) {
 	return size;
 }
 
-/* »ñµÃÄ³Î»ÖÃ½áµãµÄµØÖ·£¬ÈÃÍâ²¿½øĞĞĞŞ¸Ä, Ê§°ÜÔò·µ»Ø¿ÕÖ¸Õë*/
+/* è·å¾—æŸä½ç½®ç»“ç‚¹çš„åœ°å€ï¼Œè®©å¤–éƒ¨è¿›è¡Œä¿®æ”¹, å¤±è´¥åˆ™è¿”å›ç©ºæŒ‡é’ˆ*/
 route* getRoutePointer(route *pHead, int pos) {
 
 	if (pHead == NULL) {
@@ -270,7 +270,7 @@ car *getCarPointer(car *pHead, int pos) {
 	return pNode;
 }
 
-/* Ïòµ¥Á´±íÖĞµÚpos¸ö½áµãÎ»ÖÃ²åÈëÔªËØÎªxµÄ½áµã(°Ñ¸ÃÎ»ÖÃµÄÍùºó¼·)£¬Èô²åÈë³É¹¦·µ»ØĞÂ½áµãµÄÖ¸Õë£¬·ñÔò·µ»ØNULL*/
+/* å‘å•é“¾è¡¨ä¸­ç¬¬posä¸ªç»“ç‚¹ä½ç½®æ’å…¥å…ƒç´ ä¸ºxçš„ç»“ç‚¹(æŠŠè¯¥ä½ç½®çš„å¾€åæŒ¤)ï¼Œè‹¥æ’å…¥æˆåŠŸè¿”å›æ–°ç»“ç‚¹çš„æŒ‡é’ˆï¼Œå¦åˆ™è¿”å›NULL*/
 route* AddRouteNode(route *HEAD, int pos) {
 	route *pHead = HEAD;
 	route *pPre = HEAD;//both set to the first( init)
@@ -306,13 +306,13 @@ route* AddRouteNode(route *HEAD, int pos) {
 	return pNew;
 }
 
-/* ´Óµ¥Á´±íÖĞÉ¾³ıµÚpos¸ö½áµã(¼æÈİÍ·Î²), @return: the new head pointer.*/
+/* ä»å•é“¾è¡¨ä¸­åˆ é™¤ç¬¬posä¸ªç»“ç‚¹(å…¼å®¹å¤´å°¾), @return: the new head pointer.*/
 route* DelRoutePos(route *HeadP, int pos) {
 	route *pHead = HeadP;
-	route *pTmp = HeadP;//pTmep¼´Îª±»É¾³ı½áµãµÄÇ°Ò»¸ö½áµã
-	//·À¿ÕÖ¸Õë
+	route *pTmp = HeadP;//pTmepå³ä¸ºè¢«åˆ é™¤ç»“ç‚¹çš„å‰ä¸€ä¸ªç»“ç‚¹
+	//é˜²ç©ºæŒ‡é’ˆ
 	if (NULL == pHead) {
-		printf("DelPosº¯ÊıÖ´ĞĞ£¬Á´±íÎª¿Õ\n");
+		printf("DelPoså‡½æ•°æ‰§è¡Œï¼Œé“¾è¡¨ä¸ºç©º\n");
 		return NULL;
 	}
 	register int i = 0;
@@ -323,8 +323,8 @@ route* DelRoutePos(route *HeadP, int pos) {
 		pHead = pHead->next;
 		++i;
 	}
-	if (i==0) {//¼´É¾³ıÍ·½áµã
-		route * returnP = pHead->next;//·µ»ØµÚ¶ş¸ö½áµã
+	if (i==0) {//å³åˆ é™¤å¤´ç»“ç‚¹
+		route * returnP = pHead->next;//è¿”å›ç¬¬äºŒä¸ªç»“ç‚¹
 		free(pHead);
 		return returnP;
 	}
@@ -334,10 +334,10 @@ route* DelRoutePos(route *HeadP, int pos) {
 }
 site* DelSitePos(site *HeadP, int pos) {
 	site *pHead = HeadP;
-	site *pTmp = HeadP;//pTmep¼´Îª±»É¾³ı½áµãµÄÇ°Ò»¸ö½áµã
-						//·À¿ÕÖ¸Õë
+	site *pTmp = HeadP;//pTmepå³ä¸ºè¢«åˆ é™¤ç»“ç‚¹çš„å‰ä¸€ä¸ªç»“ç‚¹
+						//é˜²ç©ºæŒ‡é’ˆ
 	if (NULL == pHead) {
-		printf("DelPosº¯ÊıÖ´ĞĞ£¬Á´±íÎª¿Õ\n");
+		printf("DelPoså‡½æ•°æ‰§è¡Œï¼Œé“¾è¡¨ä¸ºç©º\n");
 		return NULL;
 	}
 	register int i = 0;
@@ -348,8 +348,8 @@ site* DelSitePos(site *HeadP, int pos) {
 		pHead = pHead->next;
 		++i;
 	}
-	if (i == 0) {//¼´É¾³ıÍ·½áµã
-		route * returnP = pHead->next;//·µ»ØµÚ¶ş¸ö½áµã
+	if (i == 0) {//å³åˆ é™¤å¤´ç»“ç‚¹
+		route * returnP = pHead->next;//è¿”å›ç¬¬äºŒä¸ªç»“ç‚¹
 		free(pHead);
 		return returnP;
 	}
@@ -359,10 +359,10 @@ site* DelSitePos(site *HeadP, int pos) {
 }
 car* DelCarPos(car *HeadP, int pos) {
 	car *pHead = HeadP;
-	car *pTmp = HeadP;//pTmep¼´Îª±»É¾³ı½áµãµÄÇ°Ò»¸ö½áµã
-					   //·À¿ÕÖ¸Õë
+	car *pTmp = HeadP;//pTmepå³ä¸ºè¢«åˆ é™¤ç»“ç‚¹çš„å‰ä¸€ä¸ªç»“ç‚¹
+					   //é˜²ç©ºæŒ‡é’ˆ
 	if (NULL == pHead) {
-		printf("DelPosº¯ÊıÖ´ĞĞ£¬Á´±íÎª¿Õ\n");
+		printf("DelPoså‡½æ•°æ‰§è¡Œï¼Œé“¾è¡¨ä¸ºç©º\n");
 		return NULL;
 	}
 	register int i = 0;
@@ -373,8 +373,8 @@ car* DelCarPos(car *HeadP, int pos) {
 		pHead = pHead->next;
 		++i;
 	}
-	if (i == 0) {//¼´É¾³ıÍ·½áµã
-		route * returnP = pHead->next;//·µ»ØµÚ¶ş¸ö½áµã
+	if (i == 0) {//å³åˆ é™¤å¤´ç»“ç‚¹
+		route * returnP = pHead->next;//è¿”å›ç¬¬äºŒä¸ªç»“ç‚¹
 		free(pHead);
 		return returnP;
 	}
@@ -383,7 +383,7 @@ car* DelCarPos(car *HeadP, int pos) {
 	return HeadP;
 }
 
-/* ½»»»2¸öÔªËØµÄÎ»ÖÃ£¬¼ÇµÃ¼ì²âÍ·ÊÇ·ñ¸Ä±ä */
+/* äº¤æ¢2ä¸ªå…ƒç´ çš„ä½ç½®ï¼Œè®°å¾—æ£€æµ‹å¤´æ˜¯å¦æ”¹å˜ */
 void swapRoute(route **ppNode, int posA, int posB) {
 	route *node = *ppNode;
 	int i;

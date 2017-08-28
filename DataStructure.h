@@ -1,8 +1,8 @@
-#include <stdlib.h>
+ï»¿#include <stdlib.h>
 char** setDoubleCharArray(char** out, char* in);
 /**
-* »õÎïµÄ»ù±¾ĞÅÏ¢£º*Type : ×°»õ¡¢Ğ¶»õµÄ»õÎïµÄÖÖÀà
-*                  *Volume	: »õÎïËùÕ¼ÈİÁ¿£¬£¨µ¥Î»Á¢·½Ã×£©
+* è´§ç‰©çš„åŸºæœ¬ä¿¡æ¯ï¼š*Type : è£…è´§ã€å¸è´§çš„è´§ç‰©çš„ç§ç±»
+*                  *Volume	: è´§ç‰©æ‰€å å®¹é‡ï¼Œï¼ˆå•ä½ç«‹æ–¹ç±³ï¼‰
 */
 typedef struct Good {
 	char uploadType[10];
@@ -22,12 +22,12 @@ char** readGood(char* in) {
 }
 
 /**
-* ÅäËÍ³µÁ¾µÄ»ù±¾ĞÅÏ¢£º	carID£º ³µÁ¾ÅÆÕÕ
-* 					    routeID£ºÖ´ĞĞÅäËÍÂ·Ïß±àºÅ
-* 					    driverName£º Ë¾»úĞÕÃû
-* 					    driverTel£º Ë¾»úÒÆ¶¯µç»°
-*						carID: ³µÁ¾±àºÅ
-* 					    goodList£º ÔË»õÇåµ¥
+* é…é€è½¦è¾†çš„åŸºæœ¬ä¿¡æ¯ï¼š	carIDï¼š è½¦è¾†ç‰Œç…§
+* 					    routeIDï¼šæ‰§è¡Œé…é€è·¯çº¿ç¼–å·
+* 					    driverNameï¼š å¸æœºå§“å
+* 					    driverTelï¼š å¸æœºç§»åŠ¨ç”µè¯
+*						carID: è½¦è¾†ç¼–å·
+* 					    goodListï¼š è¿è´§æ¸…å•
 */
 typedef struct Car {
 	char carID[9];
@@ -49,16 +49,16 @@ char ** readCar(char* in) {
 }
 
 /**
-* ¾­Í£Õ¾µãÏêÏ¸ĞÅÏ¢:	routeNums: ¹Ì¶¨ÅäËÍÂ·ÏßÊıÁ¿
-*					    routeIDArray: ¹Ì¶¨ÅäËÍÂ·Ïß±àºÅµÄÊı×é
-*				    	siteSID: Õ¾µãĞòºÅ
-*					    siteID: Õ¾µã±àºÅ
-*					    siteNames: Õ¾µãÃû³Æ
-*					    d2Start: Óë³õÊ¼Õ¾µã¾àÀë
-*					    d2Last: ÓëÉÏÒ»¸öÕ¾µã¾àÀë
-*					    t2Last: ÓëÉÏÒ»¸öÕ¾µã½»Í¨ºÄÊ±
-*					    tWait: Í£ÁôºÄÊ±
-*					    next: Ö¸ÏòÏÂÒ»¸öÕ¾µãµÄÖ¸Õë
+* ç»åœç«™ç‚¹è¯¦ç»†ä¿¡æ¯:	routeNums: å›ºå®šé…é€è·¯çº¿æ•°é‡
+*					    routeIDArray: å›ºå®šé…é€è·¯çº¿ç¼–å·çš„æ•°ç»„
+*				    	siteSID: ç«™ç‚¹åºå·
+*					    siteID: ç«™ç‚¹ç¼–å·
+*					    siteNames: ç«™ç‚¹åç§°
+*					    d2Start: ä¸åˆå§‹ç«™ç‚¹è·ç¦»
+*					    d2Last: ä¸ä¸Šä¸€ä¸ªç«™ç‚¹è·ç¦»
+*					    t2Last: ä¸ä¸Šä¸€ä¸ªç«™ç‚¹äº¤é€šè€—æ—¶
+*					    tWait: åœç•™è€—æ—¶
+*					    next: æŒ‡å‘ä¸‹ä¸€ä¸ªç«™ç‚¹çš„æŒ‡é’ˆ
 */
 typedef struct Site {
 	char routeID[7];
@@ -91,19 +91,19 @@ char** readSite(char* in) {
 }
 
 /**
-* ÅäËÍÂ·ÏßÏêÏ¸ĞÅÏ¢:	routeID: ¹Ì¶¨ÅäËÍÂ·Ïß±àºÅ
-*				    	name: ¹Ì¶¨ÅäËÍÂ·Ïß±àºÅÃû³Æ
-*				    	siteNums: ¹Ì¶¨ÅäËÍÂ·Ïß×ÜÕ¾µãÊı
-*				    	miles: ¹Ì¶¨ÅäËÍÂ·Ïß×Ü¹«ÀïÊı
-*				    	period: È«Õ¾µãÅäËÍ×ÜºÄÊ±
-*				    	startSite: ÆğÊ¼Õ¾µã±àºÅ
-*				    	endSite: ÖÕÖ¹Õ¾µã±àºÅ
-*				    	adminName: ¸ºÔğÈËĞÕÃû
-*				    	tel: ¸ºÔğÈË°ì¹«ÊÒµç»°
-*				    	mTel: ¸ºÔğÈËÒÆ¶¯µç»°
-*				    	email: ¸ºÔğÈËµç×ÓÓÊÏä
-*				    	firstSite: Ö¸ÏòÕ¾µã£¨¼´µÚÒ»¸öÕ¾µã£©µÄÖ¸Õë
-*				    	next: Ö¸ÏòÏÂÒ»¸öÂ·ÏßµÄÖ¸Õë
+* é…é€è·¯çº¿è¯¦ç»†ä¿¡æ¯:	routeID: å›ºå®šé…é€è·¯çº¿ç¼–å·
+*				    	name: å›ºå®šé…é€è·¯çº¿ç¼–å·åç§°
+*				    	siteNums: å›ºå®šé…é€è·¯çº¿æ€»ç«™ç‚¹æ•°
+*				    	miles: å›ºå®šé…é€è·¯çº¿æ€»å…¬é‡Œæ•°
+*				    	period: å…¨ç«™ç‚¹é…é€æ€»è€—æ—¶
+*				    	startSite: èµ·å§‹ç«™ç‚¹ç¼–å·
+*				    	endSite: ç»ˆæ­¢ç«™ç‚¹ç¼–å·
+*				    	adminName: è´Ÿè´£äººå§“å
+*				    	tel: è´Ÿè´£äººåŠå…¬å®¤ç”µè¯
+*				    	mTel: è´Ÿè´£äººç§»åŠ¨ç”µè¯
+*				    	email: è´Ÿè´£äººç”µå­é‚®ç®±
+*				    	firstSite: æŒ‡å‘ç«™ç‚¹ï¼ˆå³ç¬¬ä¸€ä¸ªç«™ç‚¹ï¼‰çš„æŒ‡é’ˆ
+*				    	next: æŒ‡å‘ä¸‹ä¸€ä¸ªè·¯çº¿çš„æŒ‡é’ˆ
 */
 typedef struct Route {
 	char routeID[7];
@@ -117,11 +117,11 @@ typedef struct Route {
 	char tel[9];
 	char mTel[12];
 	char email[51];
-	struct Site * firstSite;//Ö¸Ïò¸ÃÂ·ÏßµÄµÚÒ»¸öÕ¾µã£¬²¢ĞÎ³ÉÂ·ÏßÁ´±í
+	struct Site * firstSite;//æŒ‡å‘è¯¥è·¯çº¿çš„ç¬¬ä¸€ä¸ªç«™ç‚¹ï¼Œå¹¶å½¢æˆè·¯çº¿é“¾è¡¨
 	struct Route * next;
 } route;
 
-/*°ÑÊı¾İ·Ö½âÎª¶şÎ¬×Ö·ûÖ¸Õë*/
+/*æŠŠæ•°æ®åˆ†è§£ä¸ºäºŒç»´å­—ç¬¦æŒ‡é’ˆ*/
 char** readRoute(char* in) {
 	char** strArray = (char**)malloc(sizeof(char *) * 11);
 	strArray[0] = (char*)malloc(sizeof(char) * 7); 
@@ -149,10 +149,10 @@ void freeDoubleCharArray(int num, char ** info) {
 
 }
 
-//½«Ò»Î¬×Ö·ûÊı×éµÄÄÚÈİÇĞ·ÖÖÁÒÑ¾­¿ªºÃ¿Õ¼äµÄ¶şÎ¬×Ö·ûÊı×éÖĞÈ¥¡£
+//å°†ä¸€ç»´å­—ç¬¦æ•°ç»„çš„å†…å®¹åˆ‡åˆ†è‡³å·²ç»å¼€å¥½ç©ºé—´çš„äºŒç»´å­—ç¬¦æ•°ç»„ä¸­å»ã€‚
 char** setDoubleCharArray(char** out, char* in) {
 	if (out == NULL) {
-		printf("¿Õ¼ä¿ª±ÙÊ§°Ü\n");
+		printf("ç©ºé—´å¼€è¾Ÿå¤±è´¥\n");
 		return NULL;
 	}
 	register int allIndex = 0;

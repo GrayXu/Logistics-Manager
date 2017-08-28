@@ -1,10 +1,8 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <ListTool.h>
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
-
-//TODO: update files
 
 route * initData();
 void printFronPage();
@@ -15,11 +13,13 @@ void addRoute(route * routeHeadP);
 char* noNfgets(char * Buffer, int MaxConut, FILE* Stream);
 int changeRoute(route * routeSpecial);
 void printfSitePage(route *routeP);
+int changeSaveName(char* old, char* new);
+int changeSite(site * siteSpecific);
 
 int main() {
 	route* routeHeadP;
-	routeHeadP = initData();//³õÊ¼»¯Êı¾İÈëÁ´±í
-	char *url = malloc(sizeof(char) * 20);//¿ª±Ù¿Õ¼ä´ıÊ¹ÓÃ
+	routeHeadP = initData();//åˆå§‹åŒ–æ•°æ®å…¥é“¾è¡¨
+	char *url = malloc(sizeof(char) * 20);//å¼€è¾Ÿç©ºé—´å¾…ä½¿ç”¨
 	//int isFrontPage = 1;
 	while (1) {
 	    printFronPage();
@@ -30,70 +30,66 @@ int main() {
 		if (input1 == 1) {
 			int isRoutePage = 1;
 			while (isRoutePage) {
-				printRoutePage(routeHeadP);//Êä³öÂ·ÏßÒ³µÄĞÅÏ¢
+				printRoutePage(routeHeadP);//è¾“å‡ºè·¯çº¿é¡µçš„ä¿¡æ¯
 				int input2 = 0; scanf("%d%*c", &input2);
 				int seq = 0;
 
 				if (input2 == 1) {
-					printf("ÏëÏêÏ¸²é¿´µÚ¼¸ÌõÂ·Ïß£º");
+					printf("æƒ³è¯¦ç»†æŸ¥çœ‹ç¬¬å‡ æ¡è·¯çº¿ï¼š");
 					seq = 0; scanf("%d%*c", &seq);
 					printfSitePage(getRoutePointer(routeHeadP, seq - 1));
 
 				} else if (input2 == 2) {
-					printf("ÏëĞŞ¸ÄµÚ¼¸ÌõÂ·Ïß£º");
+					printf("æƒ³ä¿®æ”¹ç¬¬å‡ æ¡è·¯çº¿ï¼š");
 					seq = 0; scanf("%d%*c", &seq);
 					changeRoute(getRoutePointer(routeHeadP, seq-1));
 					updateRoutesFILE(routeHeadP);
-					MessageBox(NULL, TEXT("³É¹¦ĞŞ¸ÄÂ·Ïß"), TEXT("²Ù×÷³É¹¦"), MB_OK);
-					//TODO£ºÍòÒ»ĞŞ¸ÄÁË±àºÅµÄ´¦ÀíÂß¼­
+					MessageBox(NULL, TEXT("æˆåŠŸä¿®æ”¹è·¯çº¿"), TEXT("æ“ä½œæˆåŠŸ"), MB_OK);
 					system("cls");
 				} else if (input2 == 3) {
-					printf("ÏëÉ¾³ıµÚ¼¸ÌõÂ·Ïß£º");
+					printf("æƒ³åˆ é™¤ç¬¬å‡ æ¡è·¯çº¿ï¼š");
 					seq = 0; scanf("%d%*c", &seq);
 					routeHeadP = DelRoutePos(routeHeadP, seq-1);
 					updateRoutesFILE(routeHeadP);
-					//É¾³ı¶ÔÓ¦µÄ´æµµÎÄ¼ş
+					//åˆ é™¤å¯¹åº”çš„å­˜æ¡£æ–‡ä»¶ TODOï¼šæ·±å±‚ç­›é€‰æœªé‡å¤ç«™ç‚¹åˆ é™¤
 					strcpy(url, "save/");
 					strcat(url, getRoutePointer(routeHeadP, sizeRouteList(routeHeadP) - 1)->routeID);
 					strcat(url, ".txt");
 					remove(url);
-					MessageBox(NULL, TEXT("³É¹¦É¾³ıÂ·Ïß"), TEXT("²Ù×÷³É¹¦"), MB_OK);
+					MessageBox(NULL, TEXT("æˆåŠŸåˆ é™¤è·¯çº¿"), TEXT("æ“ä½œæˆåŠŸ"), MB_OK);
 					system("cls");
 				} else if (input2 == 4) {
 					addRoute(routeHeadP);
 					updateRoutesFILE(routeHeadP);
-					MessageBox(NULL, TEXT("³É¹¦ÔöÌíÂ·Ïß\n½¨Òé½øÈë¸ÃÂ·ÏßÏêÏ¸ĞÅÏ¢½çÃæÌí¼ÓÕ¾µãĞÅÏ¢"), TEXT("²Ù×÷³É¹¦"), MB_OK);
-					//´´½¨¶ÔÓ¦µÄÂ·Ïß´æµµÎÄ¼ş£¬µ«ÈÔÈ»ÊÇ¿ÕÎÄ¼ş¡£
+					MessageBox(NULL, TEXT("æˆåŠŸå¢æ·»è·¯çº¿\nå»ºè®®ç»§ç»­è¿›å…¥è¯¥è·¯çº¿è¯¦ç»†ä¿¡æ¯ç•Œé¢æ·»åŠ ç«™ç‚¹ä¿¡æ¯"), TEXT("æ“ä½œæˆåŠŸ"), MB_OK);
+					//åˆ›å»ºå¯¹åº”çš„è·¯çº¿å­˜æ¡£æ–‡ä»¶ï¼Œä½†ä»ç„¶æ˜¯ç©ºæ–‡ä»¶ã€‚
 					char *url = malloc(sizeof(char) * 20);
 					strcpy(url, "save/");
 					strcat(url, getRoutePointer(routeHeadP, sizeRouteList(routeHeadP)-1)->routeID);
 					strcat(url, ".txt");
 					FILE * newF = fopen(url, "w");
 					fclose(newF);
-
 					system("cls");
 				} else if (input2 == 5) {
 					isRoutePage = 0;
 					system("cls");
 				}
-
 			}
 		} else if (input1 == 2) {
 			printPowerBy();
 			continue;
 		} else {
 			system("cls");
-			printf("ÊäÈë´íÎóÊı×Ö");
+			printf("è¾“å…¥é”™è¯¯æ•°å­—");
 		}
 	}
 	free(url);
-	
 	
 	return 0;
 }
 
 
-/*³õÊ¼»¯Êı¾İ*/
+/*åˆå§‹åŒ–æ•°æ®*/
 route * initData() {
 	FILE *fRouteP = fopen("save/routes.txt", "r+");
 	route * routeHeadP = NULL;
@@ -119,7 +115,7 @@ route * initData() {
 			}
 			site * siteHeadP = creatSiteList(fSite);
 			fclose(fSite);
-			routeP->firstSite = siteHeadP;//½«Õ¾µãÁ´±íµÄÍ·½áµãÖ¸Õë´«µİ¸ø¶ÔÓ¦µÄÂ·Ïß
+			routeP->firstSite = siteHeadP;//å°†ç«™ç‚¹é“¾è¡¨çš„å¤´ç»“ç‚¹æŒ‡é’ˆä¼ é€’ç»™å¯¹åº”çš„è·¯çº¿
 			
 			//set infomation about those cars in this site
 			for (j = 0; j < sizeSiteList(siteHeadP); j++) {
@@ -159,32 +155,32 @@ route * initData() {
 
 void printFronPage() {
 	printf("-------------------------------------------------\n");
-	printf("|»¶Ó­À´µ½ÎïÁ÷ĞÅÏ¢¹ÜÀíÏµÍ³£¬°´¶ÔÓ¦Êı×Ö½øÈë¹¦ÄÜ\t|\n");
-	printf("|\t1.½øÈëÏµÍ³\t\t\t\t|\n");
-	printf("|\t2.ÖÆ×÷ÕßĞÅÏ¢\t\t\t\t|\n");
+	printf("|æ¬¢è¿æ¥åˆ°ç‰©æµä¿¡æ¯ç®¡ç†ç³»ç»Ÿï¼ŒæŒ‰å¯¹åº”æ•°å­—è¿›å…¥åŠŸèƒ½\t|\n");
+	printf("|\t1.è¿›å…¥ç³»ç»Ÿ\t\t\t\t|\n");
+	printf("|\t2.åˆ¶ä½œè€…ä¿¡æ¯\t\t\t\t|\n");
 	printf("-------------------------------------------------\n");
 }
 
 void printPowerBy() {
 	system("cls");
-	MessageBox(NULL, TEXT("»ªÖĞ¿Æ¼¼´óÑ§\nIOT1601 Ğì¹âÀÚ\nCÓïÑÔ³ÌĞòÉè¼Æ_¿Î³ÌÉè¼Æ×÷Æ·\nÎïÁ÷ĞÅÏ¢²éÑ¯ÏµÍ³"), TEXT("ÖÆ×÷ÕßĞÅÏ¢"), MB_OK);
+	MessageBox(NULL, TEXT("åä¸­ç§‘æŠ€å¤§å­¦\nIOT1601 å¾å…‰ç£Š\nCè¯­è¨€ç¨‹åºè®¾è®¡_è¯¾ç¨‹è®¾è®¡ä½œå“\nç‰©æµä¿¡æ¯æŸ¥è¯¢ç³»ç»Ÿ"), TEXT("åˆ¶ä½œè€…ä¿¡æ¯"), MB_OK);
 }
 
 void printRoutePage(route * routeHeadP) {
 	route * routeP = routeHeadP;
 	system("cls");
-	printf("------------------ËùÓĞÂ·ÏßĞÅÏ¢-------------------\n");
-	char first[] = "±àºÅ";
-	char second[] = "Ãû³Æ";
-	char third[] = "Õ¾µãÊı";
-	char fourth[] = "¹«ÀïÊı";
-	char fifth[] = "ºÄÊ±";
-	char sixth[] = "ÆğÊ¼Õ¾µã";
-	char seventh[] = "ÖÕÖ¹Õ¾µã";
-	char eighth[] = "¸ºÔğÈË";
-	char ninth[] = "¹Ì¶¨µç»°";
-	char tenth[] = "ÒÆ¶¯µç»°";
-	char eleventh[] = "µç×ÓÓÊÏä";
+	printf("------------------æ‰€æœ‰è·¯çº¿ä¿¡æ¯-------------------\n");
+	char first[] = "ç¼–å·";
+	char second[] = "åç§°";
+	char third[] = "ç«™ç‚¹æ•°";
+	char fourth[] = "å…¬é‡Œæ•°";
+	char fifth[] = "è€—æ—¶";
+	char sixth[] = "èµ·å§‹ç«™ç‚¹";
+	char seventh[] = "ç»ˆæ­¢ç«™ç‚¹";
+	char eighth[] = "è´Ÿè´£äºº";
+	char ninth[] = "å›ºå®šç”µè¯";
+	char tenth[] = "ç§»åŠ¨ç”µè¯";
+	char eleventh[] = "ç”µå­é‚®ç®±";
 	printf("|  %-6s %-20s %-6s %-10s %-10s %-10s %-10s %-8s %-8s %-11s %-50s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
 
 	register int i = 1;
@@ -195,22 +191,36 @@ void printRoutePage(route * routeHeadP) {
 		i++;
 	}
 	printf("-------------------------------------------------\n");
-	printf("|\t1.²é¿´Â·Ïß¾ßÌåĞÅÏ¢\t\t\t|\n");
-	printf("|\t2.½øĞĞĞŞ¸Ä\t\t\t\t|\n");
-	printf("|\t3.½øĞĞÉ¾³ı\t\t\t\t|\n");
-	printf("|\t4.½øĞĞÔöÌí\t\t\t\t|\n");
-	printf("|\t5.·µ»ØÉÏ¼¶²Ëµ¥\t\t\t\t|\n");
-	printf("----------------°´Êı×ÖÑ¡Ôñ¹¦ÄÜ-------------------\n");
+	printf("|\t1.æŸ¥çœ‹è·¯çº¿å…·ä½“ä¿¡æ¯\t\t\t|\n");
+	printf("|\t2.è¿›è¡Œä¿®æ”¹\t\t\t\t|\n");
+	printf("|\t3.è¿›è¡Œåˆ é™¤\t\t\t\t|\n");
+	printf("|\t4.è¿›è¡Œå¢æ·»\t\t\t\t|\n");
+	printf("|\t5.è¿”å›ä¸Šçº§èœå•\t\t\t\t|\n");
+	printf("----------------æŒ‰æ•°å­—é€‰æ‹©åŠŸèƒ½-------------------\n");
 }
 
 void updateRoutesFILE(route* routeHeadP) {
 	route * routeP = routeHeadP;
-	FILE *fRouteP = fopen("save/routes.txt", "w+");//´ÓÍ·¸ÄĞ´ÎÄ±¾
+	FILE *fRouteP = fopen("save/routes.txt", "w+");//ä»å¤´æ”¹å†™æ–‡æœ¬
 	while (routeP != NULL) {
 		fprintf(fRouteP,"%s;%s;%d;%f;%f;%s;%s;%s;%s;%s;%s\n",routeP->routeID, routeP->name, routeP->siteNums, routeP->miles, routeP->period, routeP->startSite, routeP->endSite, routeP->adminName, routeP->tel, routeP->mTel, routeP->email);
 		routeP = routeP->next;
 	}
 	fclose(fRouteP);
+}
+void updateSitesFILE(site * siteHeadP) {
+	site * siteP = siteHeadP;
+	char * url = (char*)malloc(sizeof(char) * 20);
+	strcpy(url, "save/");
+	strcat(url, siteHeadP->routeID);
+	strcat(url, ".txt");
+	FILE *fSiteP = fopen(url, "w+");//ä»å¤´æ”¹å†™æ–‡æœ¬
+	while (siteP != NULL) {
+		fprintf(fSiteP, "%s;%d;%s;%s;%f;%f;%f;%f;%s\n",siteP->routeID,siteP->siteSID, siteP->siteID, siteP->siteName, siteP->d2Start, siteP->d2Last, siteP->time2Last, siteP->waitTime, siteP->routeIDArray);
+		siteP = siteP->next;
+	}
+	fclose(fSiteP);
+	free(siteP);
 }
 
 //The new route would be the last node in this list.
@@ -219,41 +229,41 @@ void addRoute(route * routeHeadP) {
 	route * newRouteP = AddRouteNode(routeHeadP, sizeRouteList(routeHeadP));
 	if (newRouteP != NULL) {
 		char inputTemp[51];
-		printf("---------------ÇëÊäÈëĞÂÂ·ÏßµÄĞÅÏ¢----------------\n");
-		printf("ÇëÊäÈë±àºÅ:");
+		printf("---------------è¯·è¾“å…¥æ–°è·¯çº¿çš„ä¿¡æ¯----------------\n");
+		printf("è¯·è¾“å…¥ç¼–å·:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->routeID, inputTemp);
-		printf("ÇëÊäÈëÃû³Æ:");
+		printf("è¯·è¾“å…¥åç§°:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->name, inputTemp);
-		printf("ÇëÊäÈë×ÜÕ¾µãÊı:");
+		printf("è¯·è¾“å…¥æ€»ç«™ç‚¹æ•°:");
 		short sitesCount = 0;
 		scanf("%d%*c", &sitesCount);
 		newRouteP->siteNums = sitesCount;
-		printf("ÇëÊäÈë×Ü¹«ÀïÊı:");
+		printf("è¯·è¾“å…¥æ€»å…¬é‡Œæ•°:");
 		float fMiles = 0;
 		scanf("%f%*c", &fMiles);
 		newRouteP->miles = fMiles;
-		printf("ÇëÊäÈë×ÜºÄÊ±:");
+		printf("è¯·è¾“å…¥æ€»è€—æ—¶:");
 		float fPeriod = 0;
 		scanf("%f%*c", &fPeriod);
 		newRouteP->period = fPeriod;
-		printf("ÇëÊäÈëÆğÊ¼Õ¾µã±àºÅ:");
+		printf("è¯·è¾“å…¥èµ·å§‹ç«™ç‚¹ç¼–å·:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->startSite, inputTemp);
-		printf("ÇëÊäÈëÖÕÖ¹Õ¾µã±àºÅ:");
+		printf("è¯·è¾“å…¥ç»ˆæ­¢ç«™ç‚¹ç¼–å·:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->endSite, inputTemp);
-		printf("ÇëÊäÈë¸ºÔğÈËĞÕÃû:");
+		printf("è¯·è¾“å…¥è´Ÿè´£äººå§“å:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->adminName, inputTemp);
-		printf("ÇëÊäÈë¸ºÔğÈË°ì¹«ÊÒµç»°:");
+		printf("è¯·è¾“å…¥è´Ÿè´£äººåŠå…¬å®¤ç”µè¯:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->tel, inputTemp);
-		printf("ÇëÊäÈë¸ºÔğÈËÒÆ¶¯µç»°:");
+		printf("è¯·è¾“å…¥è´Ÿè´£äººç§»åŠ¨ç”µè¯:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->mTel, inputTemp);
-		printf("ÇëÊäÈë¸ºÔğÈËµç×ÓÓÊÏä:");
+		printf("è¯·è¾“å…¥è´Ÿè´£äººç”µå­é‚®ç®±:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->email, inputTemp);
 	} else {
@@ -273,74 +283,129 @@ char* noNfgets(char * Buffer, int MaxConut, FILE* Stream) {
 	return returnPointer;
 }
 
-int changeRoute(route * routeSpecial) {
+int changeRoute(route * routeSpecific) {
 	printf("-------------------------------------------------\n");
-	printf("1.±àºÅ\n2.Ãû³Æ\n3.×ÜÕ¾µãÊı\n4.×Ü¹«ÀïÊı\n5.×ÜºÄÊ±\n6.ÆğÊ¼Õ¾µã±àºÅ\n7.ÖÕÖ¹Õ¾µã±àºÅ\n8.¸ºÔğÈËĞÕÃû\n9.¸ºÔğÈË°ì¹«ÊÒµç»°\n10.¸ºÔğÈËÒÆ¶¯µç»°\n11.¸ºÔğÈËµç×ÓÓÊÏä\nÇëÑ¡ÔñÄãÒªĞŞ¸ÄµÄÊôĞÔ:");
+	printf("1.ç¼–å·\n2.åç§°\n3.æ€»ç«™ç‚¹æ•°\n4.æ€»å…¬é‡Œæ•°\n5.æ€»è€—æ—¶\n6.èµ·å§‹ç«™ç‚¹ç¼–å·\n7.ç»ˆæ­¢ç«™ç‚¹ç¼–å·\n8.è´Ÿè´£äººå§“å\n9.è´Ÿè´£äººåŠå…¬å®¤ç”µè¯\n10.è´Ÿè´£äººç§»åŠ¨ç”µè¯\n11.è´Ÿè´£äººç”µå­é‚®ç®±\nè¯·é€‰æ‹©ä½ è¦ä¿®æ”¹çš„å±æ€§:");
 	int choose = 0;
 	scanf("%d%*c", &choose);
-	char input[51];
+	char input[51];//no free
 	switch (choose) {
 	case 1:
-		printf("ÇëÊäÈëĞÂµÄ±àºÅ:");
+		printf("è¯·è¾“å…¥æ–°çš„ç¼–å·:");
+		char * oldID = (char *)malloc(sizeof(char) * 30);
+		strcpy(oldID, routeSpecific->routeID);
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->routeID, input);
+		strcpy(routeSpecific->routeID, input);
+		//æ”¹å˜å…¶ç¼–å·å¯¹åº”çš„å­˜æ¡£æ–‡ä»¶å
+		changeSaveName(oldID, routeSpecific->routeID);
+		//TODO: è¿˜è¦æ”¹å˜è¯¥æ–‡ä»¶å†…æ‰€æœ‰æ—§è·¯çº¿ç¼–å·ï¼ï¼ï¼ï¼ï¼
+		free(oldID);
 		break;
 	case 2:
-		printf("ÇëÊäÈëĞÂµÄÃû³Æ:");
+		printf("è¯·è¾“å…¥æ–°çš„åç§°:");
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->name, input);
+		strcpy(routeSpecific->name, input);
 		break;
 	case 3:
-		printf("ÇëÊäÈëĞÂµÄ×ÜÕ¾µãÊı:");
+		printf("è¯·è¾“å…¥æ–°çš„æ€»ç«™ç‚¹æ•°:");
 		int sitesCount = 0;
 		scanf("%d%*c", &sitesCount);
-		routeSpecial->siteNums = sitesCount;
-		//TODO: auto ask if user want to set those sites infomation at the same time OR JUST NOTIFTY HIM OR HER
+		routeSpecific->siteNums = sitesCount;
 		break;
 	case 4:
-		printf("ÇëÊäÈëĞÂµÄ×Ü¹«ÀïÊı:");
+		printf("è¯·è¾“å…¥æ–°çš„æ€»å…¬é‡Œæ•°:");
 		float newMiles = 0;
 		scanf("%f%*c", newMiles);
-		routeSpecial->miles = newMiles;
+		routeSpecific->miles = newMiles;
 		break;
 	case 5:
-		printf("ÇëÊäÈëĞÂµÄ×ÜºÄÊ±:");
+		printf("è¯·è¾“å…¥æ–°çš„æ€»è€—æ—¶:");
 		float newPeriod = 0;
 		scanf("%f%*c", newPeriod);
-		routeSpecial->period = newPeriod;
+		routeSpecific->period = newPeriod;
 		break;
 	case 6:
-		printf("ÇëÊäÈëĞÂµÄÆğÊ¼Õ¾µã±àºÅ:");
+		printf("è¯·è¾“å…¥æ–°çš„èµ·å§‹ç«™ç‚¹ç¼–å·:");
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->startSite, input);
+		strcpy(routeSpecific->startSite, input);
 		break;
 	case 7:
-		printf("ÇëÊäÈëĞÂµÄÖÕÖ¹Õ¾µã±àºÅ:");
+		printf("è¯·è¾“å…¥æ–°çš„ç»ˆæ­¢ç«™ç‚¹ç¼–å·:");
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->endSite, input);
+		strcpy(routeSpecific->endSite, input);
 		break;
 	case 8:
-		printf("ÇëÊäÈëĞÂµÄ¸ºÔğÈËĞÕÃû:");
+		printf("è¯·è¾“å…¥æ–°çš„è´Ÿè´£äººå§“å:");
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->adminName, input);
+		strcpy(routeSpecific->adminName, input);
 		break;
 	case 9:
-		printf("ÇëÊäÈëĞÂµÄ¸ºÔğÈË°ì¹«ÊÒµç»°:");
+		printf("è¯·è¾“å…¥æ–°çš„è´Ÿè´£äººåŠå…¬å®¤ç”µè¯:");
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->tel, input);
+		strcpy(routeSpecific->tel, input);
 		break;
 	case 10:
-		printf("ÇëÊäÈëĞÂµÄ¸ºÔğÈËÒÆ¶¯µç»°:");
+		printf("è¯·è¾“å…¥æ–°çš„è´Ÿè´£äººç§»åŠ¨ç”µè¯:");
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->mTel, input);
+		strcpy(routeSpecific->mTel, input);
 		break;
 	case 11:
-		printf("ÇëÊäÈëĞÂµÄ¸ºÔğÈËµç×ÓÓÊÏä:");
+		printf("è¯·è¾“å…¥æ–°çš„è´Ÿè´£äººç”µå­é‚®ç®±:");
 		noNfgets(input, 50, stdin);
-		strcpy(routeSpecial->email, input);
+		strcpy(routeSpecific->email, input);
 		break;
 	default:
-		printf("ÊäÈëÓĞÎó\n");
+		printf("è¾“å…¥æœ‰è¯¯\n");
+		return 0;
+	}
+	return 1;
+}
+int changeSite(site * siteSpecific) {
+	printf("-------------------------------------------------\n");
+	printf("1.ç«™ç‚¹ç¼–å·\n2.ç«™ç‚¹åç§°\n3.ä¸èµ·å§‹ç«™ç‚¹è·ç¦»\n4.ä¸ä¸Šä¸€ä¸ªç«™ç‚¹è·ç¦»\n5.åœç•™è€—æ—¶\n6.ç»è¿‡æœ¬ç«™ç‚¹çš„å›ºå®šè·¯çº¿ç¼–å·\n\nè¯·é€‰æ‹©ä½ è¦ä¿®æ”¹çš„å±æ€§:");
+	int choose = 0;
+	scanf("%d%*c", &choose);
+	char input[50];//auto free
+	switch (choose) {
+	case 1:
+		printf("è¯·è¾“å…¥æ–°çš„ç«™ç‚¹ç¼–å·:");
+		char * oldID = (char *)malloc(sizeof(char) * 30);
+		strcpy(oldID, siteSpecific->siteID);
+		noNfgets(input, 50, stdin);
+		strcpy(siteSpecific->siteID, input);//å‘é“¾è¡¨å†…éƒ¨æ›´æ–°æ–°çš„ç¼–å·
+		changeSaveName(oldID, siteSpecific->siteID);//æ”¹å˜å…¶ç¼–å·å¯¹åº”çš„å­˜æ¡£æ–‡ä»¶å
+		free(oldID);
+		break;
+	case 2:
+		printf("è¯·è¾“å…¥æ–°çš„ç«™ç‚¹åç§°:");
+		noNfgets(input, 50, stdin);
+		strcpy(siteSpecific->siteName, input);
+		break;
+	case 3:
+		printf("è¯·è¾“å…¥æ–°çš„ä¸èµ·å§‹ç«™ç‚¹è·ç¦»:");
+		float d2StartNew = 0;
+		scanf("%f%*c", &d2StartNew);
+		siteSpecific->d2Start = d2StartNew;
+		break;
+	case 4:
+		printf("è¯·è¾“å…¥æ–°çš„ä¸ä¸Šä¸€ä¸ªç«™ç‚¹è·ç¦»:");
+		float d2LastNew = 0;
+		scanf("%f%*c", d2LastNew);
+		siteSpecific->d2Last = d2LastNew;
+		break;
+	case 5:
+		printf("è¯·è¾“å…¥æ–°çš„åœç•™è€—æ—¶:");
+		float newPeriod = 0;
+		scanf("%f%*c", newPeriod);
+		siteSpecific->waitTime = newPeriod;
+		break;
+	case 6:
+		printf("è¯·è¾“å…¥æ–°çš„ç»è¿‡æœ¬ç«™ç‚¹çš„å›ºå®šè·¯çº¿ç¼–å·:");
+		noNfgets(input, 50, stdin);
+		strcpy(siteSpecific->routeIDArray, input);
+		break;
+	default:
+		printf("è¾“å…¥æœ‰è¯¯!\n");
 		return 0;
 	}
 	return 1;
@@ -352,15 +417,15 @@ void printfSitePage(route *routeP) {
 	while (inSitePage) {
 		system("cls");
 		site* siteP = siteHeadP;
-		printf("----------------Â·Ïß±àºÅ£º%6s µÄËùÓĞÕ¾µãĞÅÏ¢---------------\n", siteHeadP->routeID);
-		char second[] = "ĞòºÅ";
-		char third[] = "Õ¾µã±àºÅ";
-		char fourth[] = "Õ¾µãÃû³Æ";
-		char fifth[] = "ÓëÆğÊ¼Õ¾¾àÀë";
-		char sixth[] = "ÓëÉÏÒ»¸öÕ¾¾àÀë";
-		char seventh[] = "ÓëÉÏÒ»Õ¾½»Í¨ºÄÊ±";
-		char eighth[] = "Í£ÁôºÄÊ±";
-		char ninth[] = "¾­¹ı±¾Õ¾µãµÄÂ·Ïß±àºÅ";
+		printf("----------------è·¯çº¿ç¼–å·ï¼š%6s çš„æ‰€æœ‰ç«™ç‚¹ä¿¡æ¯---------------\n", siteHeadP->routeID);
+		char second[] = "åºå·";
+		char third[] = "ç«™ç‚¹ç¼–å·";
+		char fourth[] = "ç«™ç‚¹åç§°";
+		char fifth[] = "ä¸èµ·å§‹ç«™è·ç¦»";
+		char sixth[] = "ä¸ä¸Šä¸€ä¸ªç«™è·ç¦»";
+		char seventh[] = "ä¸ä¸Šä¸€ç«™äº¤é€šè€—æ—¶";
+		char eighth[] = "åœç•™è€—æ—¶";
+		char ninth[] = "ç»è¿‡æœ¬ç«™ç‚¹çš„è·¯çº¿ç¼–å·";
 		printf("|%-4s %-10s %-50s %-12s %-14s %-16s %-8s %-50s|\n\n", second, third, fourth, fifth, sixth, seventh, eighth, ninth);
 
 		while (siteP != NULL) {
@@ -368,39 +433,74 @@ void printfSitePage(route *routeP) {
 			siteP = siteP->next;
 		}
 		printf("---------------------------------------------------------\n");
-		printf("|\t1.²é¿´Õ¾µã¾ßÌåĞÅÏ¢\t\t\t|\n");
-		printf("|\t2.½øĞĞĞŞ¸Ä\t\t\t\t|\n");
-		printf("|\t3.½øĞĞÉ¾³ı\t\t\t\t|\n");
-		printf("|\t4.½øĞĞÔöÌí\t\t\t\t|\n");
-		printf("|\t5.·µ»ØÉÏ¼¶²Ëµ¥\t\t\t\t|\n");
-		printf("--------------------°´Êı×ÖÑ¡Ôñ¹¦ÄÜ-----------------------\n");
+		printf("|\t1.æŸ¥çœ‹ç«™ç‚¹å…·ä½“ä¿¡æ¯\t\t\t|\n");
+		printf("|\t2.è¿›è¡Œä¿®æ”¹\t\t\t\t|\n");
+		printf("|\t3.è¿›è¡Œåˆ é™¤\t\t\t\t|\n");
+		printf("|\t4.è¿›è¡Œå¢æ·»\t\t\t\t|\n");
+		printf("|\t5.è¿”å›ä¸Šçº§èœå•\t\t\t\t|\n");
+		printf("--------------------æŒ‰æ•°å­—é€‰æ‹©åŠŸèƒ½-----------------------\n");
 
 		int seq = 0;
 		scanf("%d%*c", &seq);
 
 		switch (seq) {
 		case 1:
-			printf("Ïë²é¿´µÚ¼¸¸öÕ¾µãµÄÏêÏ¸ĞÅÏ¢£º");
-			//²é¿´ĞÅÏ¢Âß¼­£¨Ò»²ã²ã½øÈ¥£©
+			printf("æƒ³æŸ¥çœ‹ç¬¬å‡ ä¸ªç«™ç‚¹çš„è¯¦ç»†ä¿¡æ¯ï¼š");
+			//TODOï¼šæŸ¥çœ‹ä¿¡æ¯é€»è¾‘ï¼ˆä¸€å±‚å±‚è¿›å»ï¼‰
 			break;
 		case 2:
-			printf("ÏëĞŞ¸ÄµÚ¼¸¸öÕ¾µãµÄĞÅÏ¢:");
+			printf("æƒ³ä¿®æ”¹ç¬¬å‡ ä¸ªç«™ç‚¹çš„ä¿¡æ¯:");
+			scanf("%d%*c", &seq);
+			changeRoute(getSitePointer(siteHeadP, seq - 1));
 			break;
 		case 3:
-			printf("ÏëÉ¾³ıµÚ¼¸¸öÕ¾µãµÄĞÅÏ¢:");
+			printf("æƒ³åˆ é™¤ç¬¬å‡ ä¸ªç«™ç‚¹çš„ä¿¡æ¯:");
 			scanf("%d%*c", &seq);
-			siteHeadP = DelCarPos(siteHeadP, seq - 1);//get the new site head
-			if(siteHeadP)
+			siteHeadP = DelCarPos(siteHeadP, seq - 1);//get the new site head pointer
+			//è‡ªåŠ¨æ”¹å˜ä¸Šæ–‡
+			if (seq == 1) {//åˆ é™¤äº†ç¬¬ä¸€ä¸ª
+				strcpy(routeP->startSite, siteHeadP->siteID);//æ›´æ–°ä¸Šä¸€çº§å­˜å‚¨çš„ç¬¬ä¸€ç«™ç‚¹åç§°æ•°æ®
+				updateRoutesFILE(routeP);
+			} else if (seq == (sizeSiteList(siteHeadP)-2)) {//åˆ é™¤äº†æœ€åä¸€ä¸ª
+				strcpy(routeP->endSite, getSitePointer(siteHeadP, sizeSiteList(siteHeadP) - 1)->siteID);//æ›´æ–°ä¸Šä¸€çº§å­˜å‚¨çš„ç»ˆç‚¹ç«™ç‚¹åç§°æ•°æ®
+				updateRoutesFILE(routeP);
+			}
+			updateSitesFILE(siteHeadP);
+			//TODOï¼šä¸æ–¹ä¾¿åˆ é™¤ç«™ç‚¹æ•°æ®ï¼Œåº”ç­›é€‰æ˜¯å¦æœ‰è¢«å…¶ä»–è·¯çº¿å ç”¨
 			break;
 		case 4:
-			//ÔöÌíÂß¼­
+			//å¢æ·»é€»è¾‘
 			break;
 		case 5:
 			inSitePage = 0;
 			break;
 		default:
-			printf("ÊäÈë´íÎó£¡");//ÊäÈëµÄÊı×ÖÑ¡Ïî´íÎó
+			printf("è¾“å…¥é”™è¯¯ï¼");//è¾“å…¥çš„æ•°å­—é€‰é¡¹é”™è¯¯
 			break;
 		}
 	}
 }
+
+//change the save file's name
+int changeSaveName(char* old, char* new) {
+	char * oldUrl = (char*)malloc(20 * sizeof(char));
+	char * newUrl = (char*)malloc(20 * sizeof(char));
+	
+	strcpy(oldUrl, "save/");
+	strcat(oldUrl, old);
+	strcat(oldUrl, ".txt");
+
+	strcpy(newUrl, "save/");
+	strcat(newUrl, new);
+	strcat(newUrl, ".txt");
+	int result = 0;
+	if (rename(oldUrl, newUrl) == 0) {
+		result = 1;
+	} else {
+		result = 0;
+	}
+	free(oldUrl);
+	free(newUrl);
+	return result;
+}
+
