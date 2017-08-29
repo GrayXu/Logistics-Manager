@@ -305,7 +305,7 @@ route* AddRouteNode(route *HEAD, int pos) {
 	}
 	return pNew;
 }
-site * AddSiteRoute(site *HEAD, int pos) {
+site * AddSiteNode(site *HEAD, int pos) {
 	site *pHead = HEAD;
 	site *pPre = HEAD;//both set to the first( init)
 	site *pNew = NULL;
@@ -336,6 +336,39 @@ site * AddSiteRoute(site *HEAD, int pos) {
 		pPre->next = pNew;
 		pNew->next = pHead;
 
+	}
+	return pNew;
+}
+car * AddCarNode(car *HEAD, int pos) {
+	car *pHead = HEAD;
+	car *pPre = HEAD;//both set to the first( init)
+	car *pNew = NULL;
+	int i = 0;
+	pNew = (car *)malloc(sizeof(car));
+
+	if (pPre == NULL) {
+		return NULL;//error
+	}
+	if (NULL == pHead) {
+		return NULL;//error
+	}
+
+	if (pos == 0) {//add to be the first one
+		pNew->next = HEAD;
+	} else if (pos == sizeCarList(HEAD)) {//add to be the last one
+		car * lastSiteP = getCarPointer(HEAD, pos - 1);
+		lastSiteP->next = pNew;
+		pNew->next = NULL;
+	} else {
+		while (pHead != NULL) {
+			if (i == pos)
+				break;
+			pPre = pHead;
+			pHead = pHead->next;
+			++i;
+		}
+		pPre->next = pNew;
+		pNew->next = pHead;
 	}
 	return pNew;
 }

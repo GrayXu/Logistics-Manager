@@ -4,6 +4,8 @@
 #include <conio.h>
 #include <windows.h>
 
+//TODO：站点在不同路线内重复的解决
+//TODO：站点数自动补全
 route * initData();
 void printFronPage();
 void printPowerBy();
@@ -17,6 +19,7 @@ int changeSaveName(char* old, char* new);
 int changeSite(site * siteSpecific);
 void changeOldRouteID(route * routeSpecific);
 void printCarPage(site * siteP);
+void addCar(car * carHeadP);
 
 int main() {
 	route* routeHeadP;
@@ -37,7 +40,7 @@ int main() {
 				int seq = 0;
 
 				if (input2 == 1) {
-					printf("想详细查看第几条路线：");
+					printf("想详细查看第几条路线的站点信息：");
 					seq = 0; scanf("%d%*c", &seq);
 					printSitePage(getRoutePointer(routeHeadP, seq - 1));//进入该函数内部
 
@@ -51,13 +54,14 @@ int main() {
 				} else if (input2 == 3) {
 					printf("想删除第几条路线：");
 					seq = 0; scanf("%d%*c", &seq);
-					routeHeadP = DelRoutePos(routeHeadP, seq-1);
-					updateRoutesFILE(routeHeadP);
 					//删除对应的存档文件 TODO：深层筛选未重复站点删除
 					strcpy(url, "save/");
-					strcat(url, getRoutePointer(routeHeadP, sizeRouteList(routeHeadP) - 1)->routeID);
+					strcat(url, getRoutePointer(routeHeadP, seq - 1)->routeID);
 					strcat(url, ".txt");
 					remove(url);
+					//再更新路线合集存档
+					routeHeadP = DelRoutePos(routeHeadP, seq-1);
+					updateRoutesFILE(routeHeadP);
 					MessageBox(NULL, TEXT("成功删除路线"), TEXT("操作成功"), MB_OK);
 					system("cls");
 				} else if (input2 == 4) {
@@ -200,6 +204,7 @@ void printRoutePage(route * routeHeadP) {
 	printf("----------------按数字选择功能-------------------\n");
 }
 
+//rewrite file from list
 void updateRoutesFILE(route* routeHeadP) {
 	route * routeP = routeHeadP;
 	FILE *fRouteP = fopen("save/routes.txt", "w+");//从头改写文本
@@ -221,9 +226,35 @@ void updateSitesFILE(site * siteHeadP) {
 		siteP = siteP->next;
 	}
 	fclose(fSiteP);
-	free(siteP);
+	free(url);
 }
-
+void updateCarsFILE(car * carHeadP, char * fileName) {
+	car * carP = carHeadP;
+	char * url = (char*)malloc(sizeof(char) * 20);
+	strcpy(url, "save/");
+	strcat(url, fileName);//for example s00100
+	strcat(url, ".txt");
+	FILE *fCarP = fopen(url, "w+");//从头改写文本
+	while (carP != NULL) {
+		fprintf(fCarP, "%s;%s;%s;%s\n", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
+		carP = carP->next;
+	}
+	fclose(fCarP);
+	
+	//Update good file automatically, 'cause it's too small to open an another method to realize it.
+	carP = carHeadP;//init again
+	while (carP != NULL) {
+		strcpy(url, "save/");
+		strcat(url, carP->carID);
+		strcat(url, ".txt");
+		FILE * fGoodP = fopen(url, "w+");
+		good * goodP = carP->good;
+		fprintf("%s;%f;%s;%f\n", goodP->uploadType, goodP->upVolume, goodP->downloadType, goodP->downVolume);
+		carP = carP->next;
+		fclose(fGoodP);
+	}
+	free(url);
+}
 //The new route would be the last node in this list.
 void addRoute(route * routeHeadP) {
 	route * newRouteP = AddRouteNode(routeHeadP, sizeRouteList(routeHeadP));
@@ -275,7 +306,7 @@ void addSite(site * siteHeadP) {
 	printf("---------------请输入新站点的信息----------------\n");
 	printf("请输入新站点在路线中的序号:");
 	int seq = 0; scanf("%d%*c", &seq);
-	site * newSiteP = AddSiteRoute(siteHeadP, seq-1);
+	site * newSiteP = AddSiteNode(siteHeadP, seq-1);
 	if (newSiteP != NULL) {
 		char inputTemp[51];
 		printf("请输入站点编号:");
@@ -312,6 +343,40 @@ void addSite(site * siteHeadP) {
 			siteTemp->siteSID++;
 			siteTemp = siteTemp->next;
 		}
+	} else {
+		system("cls");
+		printf("error\n");
+	}
+}
+void addCar(car * carHeadP) {
+	car* newCarP = AddCarNode(carHeadP, sizeCarList(carHeadP));
+	if (newCarP != NULL) {
+		char inputTemp[51];
+		printf("---------------请输入新路线的信息----------------\n");
+		printf("请输入车辆牌照:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newCarP->carID, inputTemp);
+		printf("请输入执行配送路线编号:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newCarP->routeID, inputTemp);
+		printf("请输入司机姓名:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newCarP->driverName, inputTemp);
+		printf("请输入司机移动电话:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newCarP->driverTel, inputTemp);
+		printf("请输入载货货物种类:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newCarP->good->uploadType, inputTemp);
+		printf("请输入载货货物容量:");
+		float upV = 0; scanf("%f%*c", &upV);
+		newCarP->good->upVolume = upV;
+		printf("请输入卸货货物种类:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newCarP->good->downloadType, inputTemp);
+		printf("请输入卸货货物容量:");
+		float downV = 0; scanf("%f%*c", &downV);
+		newCarP->good->downVolume = downV;
 	} else {
 		system("cls");
 		printf("error\n");
@@ -457,6 +522,60 @@ int changeSite(site * siteSpecific) {
 	}
 	return 1;
 }
+int changeCar(car * carSpecific) {
+	printf("-------------------------------------------------\n");
+	printf("1.车辆牌照\n2.司机姓名\n3.司机移动电话\n4.载货货物种类\n5.载货货物容量\n6.卸货货物种类\n7.卸货货物容量\n\n请选择你要修改的属性:");
+	int choose = 0;
+	scanf("%d%*c", &choose);
+	char input[50];//auto free
+	switch (choose) {
+	case 1:
+		printf("请输入新的车辆牌照:");
+		char * oldID = (char *)malloc(sizeof(char) * 30);
+		strcpy(oldID, carSpecific->carID);
+		noNfgets(input, 50, stdin);
+		strcpy(carSpecific->carID, input);//向链表内部更新新的编号
+		changeSaveName(oldID, carSpecific->carID);//改变其编号对应的存档文件名（联动改变下文
+		free(oldID);
+		break;
+	case 2:
+		printf("请输入新的司机姓名:");
+		noNfgets(input, 50, stdin);
+		strcpy(carSpecific->driverName, input);
+		break;
+	case 3:
+		printf("请输入新的司机移动电话:");
+		noNfgets(input, 50, stdin);
+		strcpy(carSpecific->driverTel, input);
+		break;
+	case 4:
+		printf("请输入新的载货货物种类:");
+		noNfgets(input, 50, stdin);
+		strcpy(carSpecific->good->uploadType, input);
+		break;
+	case 5:
+		printf("请输入新的载货货物容量:");
+		float newUpV = 0;
+		scanf("%f%*c", &newUpV);
+		carSpecific->good->upVolume = newUpV;
+		break;
+	case 6:
+		printf("请输入新的卸货货物种类:");
+		noNfgets(input, 50, stdin);
+		strcpy(carSpecific->good->downloadType, input);
+		break;
+	case 7:
+		printf("请输入新的卸货货物容量:");
+		float newDownV = 0;
+		scanf("%f%*c", &newDownV);
+		carSpecific->good->downVolume = newDownV;
+		break;
+	default:
+		printf("输入有误!\n");
+		return 0;
+	}
+	return 1;
+}
 
 void printSitePage(route *routeP) {
 	int inSitePage = 1;
@@ -492,7 +611,7 @@ void printSitePage(route *routeP) {
 
 		switch (seq) {
 		case 1:
-			printf("想查看第几个站点的详细信息：");
+			printf("想查看第几个站点的详细车辆信息：");
 			scanf("%d%*c", &seq);
 			printCarPage(getSitePointer(siteHeadP, seq - 1));//进去该函数
 			break;
@@ -500,7 +619,8 @@ void printSitePage(route *routeP) {
 			printf("想修改第几个站点的信息:");
 			scanf("%d%*c", &seq);
 			changeSite(getSitePointer(siteHeadP, seq - 1));
-			MessageBox(NULL, TEXT("成功修改站点"), TEXT("操作成功"), MB_OK);
+			updateSitesFILE(siteHeadP);
+			MessageBox(NULL, TEXT("成功修改站点信心"), TEXT("操作成功"), MB_OK);
 			break;
 		case 3:
 			printf("想删除第几个站点的信息:");
@@ -548,13 +668,69 @@ void printSitePage(route *routeP) {
 	}
 }
 void printCarPage(site * siteP) {
-	system("cls");
 	car * carHeadP = siteP->carHeadP;
 	int inCarPage = 1;
-	/*while (inCarPage) {
+	while (inCarPage) {
+		system("cls");
+		car * carP = carHeadP;
+		printf("----------------站点编号：%6s 的所有车辆信息---------------\n", siteP->siteID);
+		char first[] = "车辆牌照";
+		char second[] = "执行路线编号";
+		char third[] = "司机姓名";
+		char fourth[] = "司机移动电话";
+		char fifth[] = "载货种类";
+		char sixth[] = "载货容量";
+		char seventh[] = "卸货种类";
+		char eighth[] = "卸货容量";
+		printf("|%-8s %-12s %-8s %-11s %-10s %-10s %-10s %-10s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth);
+		while (carP != NULL) {
+			printf("|%-8s %-12s %-8s %-11s %-10s %-10s %-10s %-10s|\n", carP->carID, carP->routeID, carP->driverName, carP->driverTel, carP->good->uploadType, carP->good->upVolume, carP->good->downloadType, carP->good->downVolume);
+			carP = carP->next;
+		}
+		printf("---------------------------------------------------------\n");
+		printf("|\t1.进行修改\t\t\t\t|\n");
+		printf("|\t2.进行删除\t\t\t\t|\n");
+		printf("|\t3.进行增添\t\t\t\t|\n");
+		printf("|\t4.返回上级菜单\t\t\t\t|\n");
+		printf("--------------------按数字选择功能-----------------------\n");
+		int seq = 0; scanf("%d%*c", &seq);
+		switch (seq) {
+		case 1:
+			printf("想修改第几台车辆的信息:");
+			scanf("%d%*c", &seq);
+			changeCar(getCarPointer(carHeadP, seq - 1));
+			updateCarsFILE(carHeadP, siteP->siteID);
+			MessageBox(NULL, TEXT("成功修改车辆信息"), TEXT("操作成功"), MB_OK);
+			break;
+		case 2:
+			printf("想删除第几台车辆的信息:");
+			scanf("%d%*c", &seq);
+			//删除对应的存档文件
+			char *url = (char *)malloc(sizeof(char) * 20);
+			strcpy(url, "save/");
+			strcat(url, getCarPointer(carHeadP, seq - 1)->carID);
+			strcat(url, ".txt");
+			remove(url);
+			free(url);
 
-	}*/
+			carHeadP = DelCarPos(carHeadP, seq - 1);
+			updateCarsFILE(carHeadP, siteP->siteID);
+			MessageBox(NULL, TEXT("成功删除路线"), TEXT("操作成功"), MB_OK);
+			break;
+		case 3:
+			addCar(carHeadP);
+			updateCarsFILE(carHeadP, siteP->siteID);
+			MessageBox(NULL, TEXT("成功增添车辆"), TEXT("操作成功"), MB_OK);
+			break;
+		case 4:
+			inCarPage = 0;
+			break;
+		default:
+			break;
+		}
+	}
 }
+
 //change the save file's name
 int changeSaveName(char* old, char* new) {
 	char * oldUrl = (char*)malloc(20 * sizeof(char));
@@ -586,5 +762,3 @@ void changeOldRouteID(route * routeSpecific) {
 	}
 	updateSitesFILE(routeSpecific->firstSite);
 }
-
-
