@@ -305,6 +305,40 @@ route* AddRouteNode(route *HEAD, int pos) {
 	}
 	return pNew;
 }
+site * AddSiteRoute(site *HEAD, int pos) {
+	site *pHead = HEAD;
+	site *pPre = HEAD;//both set to the first( init)
+	site *pNew = NULL;
+	int i = 0;
+	pNew = (site *)malloc(sizeof(site));
+
+	if (pPre == NULL) {
+		return NULL;//error
+	}
+	if (NULL == pHead) {
+		return NULL;//error
+	}
+
+	if (pos == 0) {//add to be the first one
+		pNew->next = HEAD;
+	} else if (pos == sizeSiteList(HEAD)) {//add to be the last one
+		site * lastSiteP = getSitePointer(HEAD, pos - 1);
+		lastSiteP->next = pNew;
+		pNew->next = NULL;
+	} else {
+		while (pHead != NULL) {
+			if (i == pos)
+				break;
+			pPre = pHead;
+			pHead = pHead->next;
+			++i;
+		}
+		pPre->next = pNew;
+		pNew->next = pHead;
+
+	}
+	return pNew;
+}
 
 /* 从单链表中删除第pos个结点(兼容头尾), @return: the new head pointer.*/
 route* DelRoutePos(route *HeadP, int pos) {

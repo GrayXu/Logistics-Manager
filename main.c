@@ -12,9 +12,11 @@ void updateRoutesFILE(route* routeHeadP);
 void addRoute(route * routeHeadP);
 char* noNfgets(char * Buffer, int MaxConut, FILE* Stream);
 int changeRoute(route * routeSpecial);
-void printfSitePage(route *routeP);
+void printSitePage(route *routeP);
 int changeSaveName(char* old, char* new);
 int changeSite(site * siteSpecific);
+void changeOldRouteID(route * routeSpecific);
+void printCarPage(site * siteP);
 
 int main() {
 	route* routeHeadP;
@@ -37,7 +39,7 @@ int main() {
 				if (input2 == 1) {
 					printf("想详细查看第几条路线：");
 					seq = 0; scanf("%d%*c", &seq);
-					printfSitePage(getRoutePointer(routeHeadP, seq - 1));
+					printSitePage(getRoutePointer(routeHeadP, seq - 1));//进入该函数内部
 
 				} else if (input2 == 2) {
 					printf("想修改第几条路线：");
@@ -87,7 +89,6 @@ int main() {
 	
 	return 0;
 }
-
 
 /*初始化数据*/
 route * initData() {
@@ -225,7 +226,6 @@ void updateSitesFILE(site * siteHeadP) {
 
 //The new route would be the last node in this list.
 void addRoute(route * routeHeadP) {
-	//fflush(stdin);
 	route * newRouteP = AddRouteNode(routeHeadP, sizeRouteList(routeHeadP));
 	if (newRouteP != NULL) {
 		char inputTemp[51];
@@ -271,6 +271,52 @@ void addRoute(route * routeHeadP) {
 		printf("error\n");
 	}
 }
+void addSite(site * siteHeadP) {
+	printf("---------------请输入新站点的信息----------------\n");
+	printf("请输入新站点在路线中的序号:");
+	int seq = 0; scanf("%d%*c", &seq);
+	site * newSiteP = AddSiteRoute(siteHeadP, seq-1);
+	if (newSiteP != NULL) {
+		char inputTemp[51];
+		printf("请输入站点编号:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newSiteP->siteID, inputTemp);
+		printf("请输入站点名称:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newSiteP->siteName, inputTemp);
+		printf("请输入与起始站点距离:");
+		float d2S = 0;
+		scanf("%f%*c", &d2S);
+		newSiteP->d2Start = d2S;
+		printf("请输入与上一个站点距离:");
+		float d2L = 0;
+		scanf("%f%*c", &d2L);
+		newSiteP->d2Last = d2L;
+		printf("请输入与上一个站点交通耗时:");
+		float fPeriod = 0;
+		scanf("%f%*c", &fPeriod);
+		newSiteP->time2Last = fPeriod;
+		printf("请输入停留耗时:");
+		float waitTimeN = 0;
+		scanf("%f%*c", &waitTimeN);
+		newSiteP->waitTime = waitTimeN;
+		printf("请输入经过本站点固定路线编号:");
+		noNfgets(inputTemp, 50, stdin);
+		strcpy(newSiteP->routeIDArray, inputTemp);
+		//自动完成部分
+		newSiteP->siteSID = sizeSiteList(siteHeadP);
+		strcpy(newSiteP->routeID, siteHeadP->routeID);
+		//自动更新SID
+		site * siteTemp = getSitePointer(siteHeadP, seq);
+		while (siteTemp != NULL) {
+			siteTemp->siteSID++;
+			siteTemp = siteTemp->next;
+		}
+	} else {
+		system("cls");
+		printf("error\n");
+	}
+}
 
 char* noNfgets(char * Buffer, int MaxConut, FILE* Stream) {
 	char* returnPointer = fgets(Buffer, MaxConut, Stream);//now there is data in Buffer with '\n'.
@@ -299,6 +345,7 @@ int changeRoute(route * routeSpecific) {
 		//改变其编号对应的存档文件名
 		changeSaveName(oldID, routeSpecific->routeID);
 		//TODO: 还要改变该文件内所有旧路线编号！！！！！
+		changeOldRouteID(routeSpecific);
 		free(oldID);
 		break;
 	case 2:
@@ -373,7 +420,7 @@ int changeSite(site * siteSpecific) {
 		strcpy(oldID, siteSpecific->siteID);
 		noNfgets(input, 50, stdin);
 		strcpy(siteSpecific->siteID, input);//向链表内部更新新的编号
-		changeSaveName(oldID, siteSpecific->siteID);//改变其编号对应的存档文件名
+		changeSaveName(oldID, siteSpecific->siteID);//改变其编号对应的存档文件名（联动改变下文
 		free(oldID);
 		break;
 	case 2:
@@ -390,13 +437,13 @@ int changeSite(site * siteSpecific) {
 	case 4:
 		printf("请输入新的与上一个站点距离:");
 		float d2LastNew = 0;
-		scanf("%f%*c", d2LastNew);
+		scanf("%f%*c", &d2LastNew);
 		siteSpecific->d2Last = d2LastNew;
 		break;
 	case 5:
 		printf("请输入新的停留耗时:");
 		float newPeriod = 0;
-		scanf("%f%*c", newPeriod);
+		scanf("%f%*c", &newPeriod);
 		siteSpecific->waitTime = newPeriod;
 		break;
 	case 6:
@@ -411,7 +458,7 @@ int changeSite(site * siteSpecific) {
 	return 1;
 }
 
-void printfSitePage(route *routeP) {
+void printSitePage(route *routeP) {
 	int inSitePage = 1;
 	site* siteHeadP = routeP->firstSite;
 	while (inSitePage) {
@@ -446,12 +493,14 @@ void printfSitePage(route *routeP) {
 		switch (seq) {
 		case 1:
 			printf("想查看第几个站点的详细信息：");
-			//TODO：查看信息逻辑（一层层进去）
+			scanf("%d%*c", &seq);
+			printCarPage(getSitePointer(siteHeadP, seq - 1));//进去该函数
 			break;
 		case 2:
 			printf("想修改第几个站点的信息:");
 			scanf("%d%*c", &seq);
-			changeRoute(getSitePointer(siteHeadP, seq - 1));
+			changeSite(getSitePointer(siteHeadP, seq - 1));
+			MessageBox(NULL, TEXT("成功修改站点"), TEXT("操作成功"), MB_OK);
 			break;
 		case 3:
 			printf("想删除第几个站点的信息:");
@@ -465,11 +514,28 @@ void printfSitePage(route *routeP) {
 				strcpy(routeP->endSite, getSitePointer(siteHeadP, sizeSiteList(siteHeadP) - 1)->siteID);//更新上一级存储的终点站点名称数据
 				updateRoutesFILE(routeP);
 			}
+			//自动更新序号
+			site * stepSite = getSitePointer(siteHeadP, seq - 1);
+			while (stepSite != NULL) {
+				stepSite->siteSID = stepSite->siteSID - 1;
+				stepSite = stepSite->next;
+			}
 			updateSitesFILE(siteHeadP);
 			//TODO：不方便删除站点数据，应筛选是否有被其他路线占用
+			MessageBox(NULL, TEXT("成功删除站点"), TEXT("操作成功"), MB_OK);
 			break;
 		case 4:
 			//增添逻辑
+			addSite(siteHeadP);
+			updateSitesFILE(siteHeadP);
+			MessageBox(NULL, TEXT("成功增添站点\n建议继续进入该站点详细信息界面添加站点信息"), TEXT("操作成功"), MB_OK);
+			//创建对应的站点存档文件，但仍然是空文件。
+			char *url = malloc(sizeof(char) * 20);
+			strcpy(url, "save/");
+			strcat(url, getSitePointer(siteHeadP, sizeSiteList(siteHeadP) - 1)->siteID);
+			strcat(url, ".txt");
+			FILE * newF = fopen(url, "w");
+			fclose(newF);
 			break;
 		case 5:
 			inSitePage = 0;
@@ -478,9 +544,17 @@ void printfSitePage(route *routeP) {
 			printf("输入错误！");//输入的数字选项错误
 			break;
 		}
+		system("cls");
 	}
 }
+void printCarPage(site * siteP) {
+	system("cls");
+	car * carHeadP = siteP->carHeadP;
+	int inCarPage = 1;
+	/*while (inCarPage) {
 
+	}*/
+}
 //change the save file's name
 int changeSaveName(char* old, char* new) {
 	char * oldUrl = (char*)malloc(20 * sizeof(char));
@@ -503,4 +577,14 @@ int changeSaveName(char* old, char* new) {
 	free(newUrl);
 	return result;
 }
+
+void changeOldRouteID(route * routeSpecific) {
+	site* siteP = routeSpecific->firstSite;
+	while (siteP != NULL) {
+		strcpy(siteP->routeID, routeSpecific->routeID);
+		siteP = siteP->next;
+	}
+	updateSitesFILE(routeSpecific->firstSite);
+}
+
 
