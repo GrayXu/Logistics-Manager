@@ -17,11 +17,8 @@ char** readGood(char* in) {
 	strArray[1] = (char*)malloc(sizeof(char) * 10);
 	strArray[2] = (char*)malloc(sizeof(char) * 10);
 	strArray[3] = (char*)malloc(sizeof(char) * 10);
-	if (setDoubleCharArray(strArray, in) != NULL){
-        return strArray;
-	} else {
-        return NULL;
-	}
+	setDoubleCharArray(strArray, in);
+	return strArray;
 }
 
 /**
@@ -50,9 +47,9 @@ char ** readCar(char* in) {
 	if (setDoubleCharArray(strArray, in) != NULL){
         return strArray;
 	} else {
-        return NULL;
+        return NULL
 	}
-
+	
 }
 
 /**
@@ -93,11 +90,8 @@ char** readSite(char* in) {
 	strArray[6] = (char*)malloc(sizeof(char) * 11);
 	strArray[7] = (char*)malloc(sizeof(char) * 11);
 	strArray[8] = (char*)malloc(sizeof(char) * 51);
-	if (setDoubleCharArray(strArray, in) != NULL){
-        return strArray;
-	} else {
-        return NULL;
-	}
+	setDoubleCharArray(strArray, in);
+	return strArray;
 }
 
 /**
@@ -145,11 +139,8 @@ char** readRoute(char* in) {
 	strArray[8] = (char*)malloc(sizeof(char) * 9);
 	strArray[9] = (char*)malloc(sizeof(char) * 12);
 	strArray[10] = (char*)malloc(sizeof(char) * 51);
-	if (setDoubleCharArray(strArray, in) != NULL){
-        return strArray;
-	} else {
-        return NULL;
-	}
+	setDoubleCharArray(strArray, in);
+	return strArray;
 }
 
 //free stake memory( for the double char array)

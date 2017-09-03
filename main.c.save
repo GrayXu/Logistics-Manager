@@ -4,7 +4,11 @@
 #include <conio.h>
 #include <windows.h>
 
+//TOOD: 空文本空指针操作失败的处理逻辑
+
 //TODO: 实现站点在不同路线内重复的解决方案，从而自动增删站点存档
+
+//TODO: 删除结点引发内存泄漏（低级结点没有释放空间，所有以Poniter形式表现的，都需要单独释放
 
 //TODO: 特殊功能实现：某站点剩余可载货为指定重量的车辆、查询指定司机的配送清单、查询指定车辆的司机联系方式、查询指定车辆的配送路线、查询经停某站点的所有路线、查询耗时最长最短的路线、查询公里数最长最短的路线
 
@@ -700,7 +704,7 @@ void printSitePage(route *routeP, route * routeHeadP) {
 			break;
 		case 4:
 			//增添逻辑
-			siteHeadP = addSite(siteHeadP, routeP->routeID);
+			siteHeadP = addSite(siteHeadP, );
 			updateSitesFILE(siteHeadP);
 
 			//更新路线站点数信息至链表与存档

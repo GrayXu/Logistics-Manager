@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1504447202 source:d:\workspace\c\lm\logictics manager\main.c
+	<stdio.h>
+	<ListTool.h>
+	<stdlib.h>
+	<conio.h>
+	<windows.h>
+
+1504430489 d:\workspace\c\lm\logictics manager\listtool.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<DataStructure.h>
+
+1504428991 d:\workspace\c\lm\logictics manager\datastructure.h
+	<stdlib.h>
+
