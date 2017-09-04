@@ -482,12 +482,12 @@ car* DelCarPos(car *HeadP, int pos) {
 	}
 	if (i == 0) {//即删除头结点
 		car * returnP = pHead->next;//返回第二个结点
-		free(pHead->good)
+		free(pHead->good);
 		free(pHead);
 		return returnP;
 	}
 	pTmp->next = pHead->next;
-	free(pHead->good)
+	free(pHead->good);
 	free(pHead);
 	return HeadP;
 }

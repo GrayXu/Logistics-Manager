@@ -3,10 +3,11 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
+#include <wincon.h>
 
 //TODO: 实现站点在不同路线内重复的解决方案，从而自动增删站点存档
 
-//TODO: 特殊功能实现：某站点剩余可载货为指定重量的车辆、查询指定司机的配送清单、查询指定车辆的司机联系方式、查询指定车辆的配送路线、查询经停某站点的所有路线、查询耗时最长最短的路线、查询公里数最长最短的路线
+//TODO: 特殊功能实现: 查询指定司机的配送清单、查询指定车辆的司机联系方式、查询指定车辆的配送路线、查询经停某站点的所有路线、查询耗时最长最短的路线、查询公里数最长最短的路线
 
 //TODO: 报表
 
@@ -36,12 +37,16 @@ char* noNfgets(char * Buffer, int MaxConut, FILE* Stream);
 void changeOldRouteID(route * routeSpecific);
 int changeSaveName(char* old, char* new);
 void updateSitesCount(route * routeSpecific);
+void initConsole();
+void quickQuery(route * routeHeadP);
 
 int main() {
 	route* routeHeadP;
 	routeHeadP = initData();//初始化数据入链表
 	char *url = malloc(sizeof(char) * 20);//开辟空间待使用
-    system("color 3B");
+
+	initConsole();
+
 	while (1) {
 	    printFronPage();
 
@@ -99,7 +104,11 @@ int main() {
 //					fclose(newF);
 					system("cls");
 				} else if (input2 == 5) {
-					isRoutePage = 0;
+                    //快速查询命令
+                    quickQuery(routeHeadP);
+					system("cls");
+				} else if (input2 == 6){
+				    isRoutePage = 0;
 					system("cls");
 				}
 			}
@@ -116,6 +125,170 @@ int main() {
 	return 0;
 }
 
+void quickQuery(route * routeHeadP){
+    route * routeP = routeHeadP;
+    system("cls");
+    system("date /T");
+	printf("-------------------快速查询----------------------\n");
+	printf("|\t1.查询指定司机的载货卸货情况\t\t|\n");
+	printf("|\t2.查询指定车辆的司机联系方式\t\t|\n");
+	printf("|\t3.查询指定车辆的配送路线\t\t|\n");
+	printf("|\t4.查询经停某站点的所有路线\t\t|\n");
+	printf("|\t5.查询耗时最长的路线\t\t\t|\n");
+	printf("|\t6.查询耗时最短的路线\t\t\t|\n");
+	printf("|\t7.查询公里数最长的路线\t\t\t|\n");
+	printf("|\t8.查询公里数最短的路线\t\t\t|\n");
+	printf("-------------------------------------------------\n");
+	int seq = 0;scanf("%d%*c",&seq);
+	char input[21];
+	float tempFloat = 0;
+	switch (seq){
+	case 1:
+	    printf("\n请输入司机姓名：");
+	    noNfgets(input, 20, stdin);
+	    while (routeP != NULL){
+            site* siteP = routeP->firstSite;
+            while (siteP != NULL){
+                car* carP = siteP->carHeadP;
+                while (carP != NULL){
+                    if(strcmp(input, carP->driverName) == 0){
+                        if (carP->good != NULL){
+                            printf("司机 %s载货了容量为%.3f的%s，卸货了容量为%.3f的%s\n", input, carP->good->upVolume, carP->good->uploadType, carP->good->downVolume, carP->good->downloadType);
+                        } else {
+                            printf("该司机无货物信息\n");
+                        }
+                        system("pause");
+                        carP = NULL;
+                        siteP = NULL;
+                        routeP = NULL;//jump out from loops
+                    }
+                    carP = carP->next;
+                }
+                siteP = siteP->next;
+            }
+            routeP = routeP->next;
+	    }
+	    break;
+    case 2:
+        printf("\n请输入车辆牌照：");
+        noNfgets(input, 20, stdin);
+        while (routeP != NULL){
+            site* siteP = routeP->firstSite;
+            while (siteP != NULL){
+                car* carP = siteP->carHeadP;
+                while (carP != NULL){
+                    if (strcmp(carP->carID, input) == 0){
+                        printf("车辆%s的司机%s的联系方式为%s\n", input, carP->driverName, carP->driverTel);
+                        system("pause");
+                        carP = NULL;
+                        siteP = NULL;
+                        routeP = NULL;//jump out from loops
+                    }
+                    carP = carP->next;
+                }
+                siteP = siteP->next;
+            }
+            routeP = routeP->next;
+	    }
+	    break;
+    case 3:
+        printf("\n请输入车辆牌照：");
+        noNfgets(input, 20, stdin);
+        while (routeP != NULL){
+            site* siteP = routeP->firstSite;
+            while (siteP != NULL){
+                car* carP = siteP->carHeadP;
+                while (carP != NULL){
+                    if (strcmp(carP->carID, input) == 0){
+                        printf("车辆%s的配送路线为%s\n", input, carP->routeID);
+                        system("pause");
+                        carP = NULL;
+                        siteP = NULL;
+                        routeP = NULL;//jump out from loops
+                    }
+                    carP = carP->next;
+                }
+                siteP = siteP->next;
+            }
+            routeP = routeP->next;
+	    }
+	    break;
+    case 4:
+        printf("\n请输入站点编号：");
+        noNfgets(input, 20, stdin);
+        while (routeP != NULL){
+            site * siteP = routeP->firstSite;
+            while (siteP != NULL){
+                if (strcmp(siteP->siteID, input) == 0){
+                    printf("经停站点%s的所有路线:%s\n", input, siteP->routeIDArray);
+                    system("pause");
+                    siteP = NULL;
+                    routeP = NULL;//jump out from loops
+                }
+            }
+            routeP = routeP->next;
+        }
+	    break;
+    case 5:
+        tempFloat = -1;
+        while (routeP != NULL){
+            if (routeP->period > tempFloat){
+                tempFloat = routeP->miles;
+                strcpy(input, routeP->routeID);
+            }
+            routeP = routeP->next;
+        }
+        printf("耗时最长的路线是%s，总耗时为%.3f\n", input, tempFloat);
+        system("pause");
+	    break;
+    case 6:
+        tempFloat = -1;
+        while (routeP != NULL){
+            if (routeP->period > tempFloat){
+                tempFloat = routeP->miles;
+                strcpy(input, routeP->routeID);
+            }
+            routeP = routeP->next;
+        }
+        printf("耗时最短的路线是%s，总耗时为%.3f\n", input, tempFloat);
+        system("pause");
+	    break;
+    case 7:
+        tempFloat = -1;
+        while (routeP != NULL){
+            if (routeP->miles > tempFloat){
+                tempFloat = routeP->miles;
+                strcpy(input, routeP->routeID);
+            }
+            routeP = routeP->next;
+        }
+        printf("最长的路线是%s，总公里数为%.3f\n", input, tempFloat);
+        system("pause");
+	    break;
+    case 8:
+        tempFloat = 99999;
+        while (routeP != NULL){
+            if (routeP->miles < tempFloat){
+                tempFloat = routeP->miles;
+                strcpy(input, routeP->routeID);
+            }
+            routeP = routeP->next;
+        }
+        printf("最短的路线是%s，总公里数为%.3f\n", input, tempFloat);
+        system("pause");
+	    break;
+	default:
+	    break;
+	}
+
+}
+
+void initConsole(){
+    COORD size = {120, 25};
+    system("color 3B");
+    SetConsoleTitle("物流信息管理系统");
+    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), size);
+}
 /*初始化数据*/
 route * initData() {
 	FILE *fRouteP = fopen("save/routes.txt", "r");
@@ -224,7 +397,8 @@ void printRoutePage(route * routeHeadP) {
 	printf("|\t2.进行修改\t\t\t\t|\n");
 	printf("|\t3.进行删除\t\t\t\t|\n");
 	printf("|\t4.进行增添\t\t\t\t|\n");
-	printf("|\t5.返回上级菜单\t\t\t\t|\n");
+	printf("|\t5.快速查询\t\t\t\t|\n");
+	printf("|\t6.返回上级菜单\t\t\t\t|\n");
 	printf("----------------按数字选择功能-------------------\n");
 }
 
