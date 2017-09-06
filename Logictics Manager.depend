@@ -16,3 +16,20 @@
 1504428991 d:\workspace\c\lm\logictics manager\datastructure.h
 	<stdlib.h>
 
+1504700475 source:d:\workplace\c\logistics-manager\main.c
+	<stdio.h>
+	<ListTool.h>
+	<stdlib.h>
+	<conio.h>
+	<windows.h>
+	<wincon.h>
+
+1504698542 d:\workplace\c\logistics-manager\listtool.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<DataStructure.h>
+
+1504698509 d:\workplace\c\logistics-manager\datastructure.h
+	<stdlib.h>
+

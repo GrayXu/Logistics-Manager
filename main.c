@@ -142,11 +142,12 @@ void quickQuery(route * routeHeadP){
 	int seq = 0;scanf("%d%*c",&seq);
 	char input[21];
 	float tempFloat = 0;
+	int isSuccessful = 0;
 	switch (seq){
 	case 1:
 	    printf("\n请输入司机姓名：");
 	    noNfgets(input, 20, stdin);
-	    while (routeP != NULL){
+	    l4:while (routeP != NULL){
             site* siteP = routeP->firstSite;
             while (siteP != NULL){
                 car* carP = siteP->carHeadP;
@@ -157,10 +158,11 @@ void quickQuery(route * routeHeadP){
                         } else {
                             printf("该司机无货物信息\n");
                         }
-                        system("pause");
+                        isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
-                        routeP = NULL;//jump out from loops
+                        routeP = NULL;
+                        goto l4;//jump out from loops
                     }
                     carP = carP->next;
                 }
@@ -172,17 +174,18 @@ void quickQuery(route * routeHeadP){
     case 2:
         printf("\n请输入车辆牌照：");
         noNfgets(input, 20, stdin);
-        while (routeP != NULL){
+        l3:while (routeP != NULL){
             site* siteP = routeP->firstSite;
             while (siteP != NULL){
                 car* carP = siteP->carHeadP;
                 while (carP != NULL){
                     if (strcmp(carP->carID, input) == 0){
                         printf("车辆%s的司机%s的联系方式为%s\n", input, carP->driverName, carP->driverTel);
-                        system("pause");
+                        isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
-                        routeP = NULL;//jump out from loops
+                        routeP = NULL;
+                        goto l3;//jump out from loops
                     }
                     carP = carP->next;
                 }
@@ -194,17 +197,18 @@ void quickQuery(route * routeHeadP){
     case 3:
         printf("\n请输入车辆牌照：");
         noNfgets(input, 20, stdin);
-        while (routeP != NULL){
+        l2:while (routeP != NULL){
             site* siteP = routeP->firstSite;
             while (siteP != NULL){
                 car* carP = siteP->carHeadP;
                 while (carP != NULL){
                     if (strcmp(carP->carID, input) == 0){
                         printf("车辆%s的配送路线为%s\n", input, carP->routeID);
-                        system("pause");
+                        isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
-                        routeP = NULL;//jump out from loops
+                        routeP = NULL;
+                        goto l2;//jump out from loops
                     }
                     carP = carP->next;
                 }
@@ -216,14 +220,15 @@ void quickQuery(route * routeHeadP){
     case 4:
         printf("\n请输入站点编号：");
         noNfgets(input, 20, stdin);
-        while (routeP != NULL){
+        l1:while (routeP != NULL){
             site * siteP = routeP->firstSite;
             while (siteP != NULL){
                 if (strcmp(siteP->siteID, input) == 0){
                     printf("经停站点%s的所有路线:%s\n", input, siteP->routeIDArray);
-                    system("pause");
+                    isSuccessful = 1;
                     siteP = NULL;
                     routeP = NULL;//jump out from loops
+                    goto l1;
                 }
             }
             routeP = routeP->next;
@@ -235,11 +240,11 @@ void quickQuery(route * routeHeadP){
             if (routeP->period > tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("耗时最长的路线是%s，总耗时为%.3f\n", input, tempFloat);
-        system("pause");
 	    break;
     case 6:
         tempFloat = -1;
@@ -247,11 +252,11 @@ void quickQuery(route * routeHeadP){
             if (routeP->period > tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("耗时最短的路线是%s，总耗时为%.3f\n", input, tempFloat);
-        system("pause");
 	    break;
     case 7:
         tempFloat = -1;
@@ -259,11 +264,12 @@ void quickQuery(route * routeHeadP){
             if (routeP->miles > tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("最长的路线是%s，总公里数为%.3f\n", input, tempFloat);
-        system("pause");
+//        system("pause");
 	    break;
     case 8:
         tempFloat = 99999;
@@ -271,16 +277,19 @@ void quickQuery(route * routeHeadP){
             if (routeP->miles < tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("最短的路线是%s，总公里数为%.3f\n", input, tempFloat);
-        system("pause");
 	    break;
 	default:
 	    break;
 	}
-
+    if (!isSuccessful){
+        printf("找不到相关信息\n");
+    }
+    system("pause");
 }
 
 void initConsole(){
@@ -916,9 +925,9 @@ void printCarPage(site * siteP) {
 		char sixth[] = "载货容量";
 		char seventh[] = "卸货种类";
 		char eighth[] = "卸货容量";
-		printf("|%-8s %-12s %-8s %-11s %-10s %-10s %-10s %-10s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth);
+		printf("|%-8s %-12s %-8s %-12s %-10s %-10s %-10s %-10s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth);
 		while (carP != NULL) {
-			printf("|%-8s %-12s %-8s %-11s ", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
+			printf("|%-8s %-12s %-8s %-12s ", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
             if (carP->good != NULL){
                 printf("%-10s %-10.3f %-10s %-10.3f|\n", carP->good->uploadType, carP->good->upVolume, carP->good->downloadType, carP->good->downVolume);
             } else {

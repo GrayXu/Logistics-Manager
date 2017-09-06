@@ -130,18 +130,19 @@ void quickQuery(route * routeHeadP){
     system("cls");
     system("date /T");
 	printf("-------------------快速查询----------------------\n");
-	printf("|\t1.查询指定司机的载货卸货情况\t\t\t\t|\n");
-	printf("|\t2.查询指定车辆的司机联系方式\t\t\t\t|\n");
-	printf("|\t3.查询指定车辆的配送路线\t\t\t\t|\n");
-	printf("|\t4.查询经停某站点的所有路线\t\t\t\t|\n");
-	printf("|\t5.查询耗时最长的路线\t\t\t\t|\n");
-	printf("|\t6.查询耗时最短的路线\t\t\t\t|\n");
+	printf("|\t1.查询指定司机的载货卸货情况\t\t|\n");
+	printf("|\t2.查询指定车辆的司机联系方式\t\t|\n");
+	printf("|\t3.查询指定车辆的配送路线\t\t|\n");
+	printf("|\t4.查询经停某站点的所有路线\t\t|\n");
+	printf("|\t5.查询耗时最长的路线\t\t\t|\n");
+	printf("|\t6.查询耗时最短的路线\t\t\t|\n");
 	printf("|\t7.查询公里数最长的路线\t\t\t|\n");
 	printf("|\t8.查询公里数最短的路线\t\t\t|\n");
 	printf("-------------------------------------------------\n");
 	int seq = 0;scanf("%d%*c",&seq);
 	char input[21];
 	float tempFloat = 0;
+	int isSuccessful = 0;
 	switch (seq){
 	case 1:
 	    printf("\n请输入司机姓名：");
@@ -157,7 +158,8 @@ void quickQuery(route * routeHeadP){
                         } else {
                             printf("该司机无货物信息\n");
                         }
-                        system("pause");
+//                        system("pause");
+                        isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
                         routeP = NULL;//jump out from loops
@@ -179,7 +181,7 @@ void quickQuery(route * routeHeadP){
                 while (carP != NULL){
                     if (strcmp(carP->carID, input) == 0){
                         printf("车辆%s的司机%s的联系方式为%s\n", input, carP->driverName, carP->driverTel);
-                        system("pause");
+                        isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
                         routeP = NULL;//jump out from loops
@@ -201,7 +203,7 @@ void quickQuery(route * routeHeadP){
                 while (carP != NULL){
                     if (strcmp(carP->carID, input) == 0){
                         printf("车辆%s的配送路线为%s\n", input, carP->routeID);
-                        system("pause");
+                        isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
                         routeP = NULL;//jump out from loops
@@ -221,7 +223,7 @@ void quickQuery(route * routeHeadP){
             while (siteP != NULL){
                 if (strcmp(siteP->siteID, input) == 0){
                     printf("经停站点%s的所有路线:%s\n", input, siteP->routeIDArray);
-                    system("pause");
+                    isSuccessful = 1;
                     siteP = NULL;
                     routeP = NULL;//jump out from loops
                 }
@@ -235,11 +237,11 @@ void quickQuery(route * routeHeadP){
             if (routeP->period > tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("耗时最长的路线是%s，总耗时为%.3f\n", input, tempFloat);
-        system("pause");
 	    break;
     case 6:
         tempFloat = -1;
@@ -247,11 +249,11 @@ void quickQuery(route * routeHeadP){
             if (routeP->period > tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("耗时最短的路线是%s，总耗时为%.3f\n", input, tempFloat);
-        system("pause");
 	    break;
     case 7:
         tempFloat = -1;
@@ -259,11 +261,12 @@ void quickQuery(route * routeHeadP){
             if (routeP->miles > tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("最长的路线是%s，总公里数为%.3f\n", input, tempFloat);
-        system("pause");
+//        system("pause");
 	    break;
     case 8:
         tempFloat = 99999;
@@ -271,16 +274,19 @@ void quickQuery(route * routeHeadP){
             if (routeP->miles < tempFloat){
                 tempFloat = routeP->miles;
                 strcpy(input, routeP->routeID);
+                isSuccessful = 1;
             }
             routeP = routeP->next;
         }
         printf("最短的路线是%s，总公里数为%.3f\n", input, tempFloat);
-        system("pause");
 	    break;
 	default:
 	    break;
 	}
-
+	system("pause");
+    if (){
+        
+    }
 }
 
 void initConsole(){
@@ -916,9 +922,9 @@ void printCarPage(site * siteP) {
 		char sixth[] = "载货容量";
 		char seventh[] = "卸货种类";
 		char eighth[] = "卸货容量";
-		printf("|%-8s %-12s %-8s %-11s %-10s %-10s %-10s %-10s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth);
+		printf("|%-8s %-12s %-8s %-12s %-10s %-10s %-10s %-10s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth);
 		while (carP != NULL) {
-			printf("|%-8s %-12s %-8s %-11s ", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
+			printf("|%-8s %-12s %-8s %-12s ", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
             if (carP->good != NULL){
                 printf("%-10s %-10.3f %-10s %-10.3f|\n", carP->good->uploadType, carP->good->upVolume, carP->good->downloadType, carP->good->downVolume);
             } else {
