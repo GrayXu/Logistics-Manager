@@ -16,13 +16,14 @@
 1504428991 d:\workspace\c\lm\logictics manager\datastructure.h
 	<stdlib.h>
 
-1504700475 source:d:\workplace\c\logistics-manager\main.c
+1504709785 source:d:\workplace\c\logistics-manager\main.c
 	<stdio.h>
 	<ListTool.h>
 	<stdlib.h>
 	<conio.h>
 	<windows.h>
 	<wincon.h>
+	"shlobj.h"
 
 1504698542 d:\workplace\c\logistics-manager\listtool.h
 	<stdio.h>
