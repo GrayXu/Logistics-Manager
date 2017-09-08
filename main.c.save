@@ -245,7 +245,7 @@ void quickQuery(route * routeHeadP){
         printf("耗时最长的路线是%s，总耗时为%.3f\n", input, tempFloat);
 	    break;
     case 6:
-        tempFloat = -1;
+        tempFloat = 99999;
         while (routeP != NULL){
             if (routeP->period > tempFloat){
                 tempFloat = routeP->miles;
@@ -334,10 +334,10 @@ route * initData() {
 				FILE * fCar = fopen(url, "r+");
 				if (fCar == NULL) {
 					siteP->carHeadP = NULL;
-					continue;//连车都没有，更别说货物了
+					continue;//连车的存档都没有，更别说货物了
 				}
 				car * carHeadP = creatCarList(fCar);
-				siteHeadP->carHeadP = carHeadP;
+				siteP->carHeadP = carHeadP;
 
 				for (k = 0; k < sizeCarList(carHeadP); k++) {
 					car * carP = getCarPointer(carHeadP, k);
@@ -1043,42 +1043,42 @@ void makeCsv(route * routeHeadP){
 //    printf("|\t1.输出到指定路径\t\t\t\t|\n");
 //    printf("|\t2.输出到桌面\t\t\t\t|\n");
 //    printf("--------------------按数字选择功能-----------------------\n");
-    FILE * saveF = fopen("统计报表.csv","w");
+    FILE * saveF = fopen("物流信息统计报表.csv","w");
     fprintf(saveF, "所有路线信息：\n");
-    fprintf(saveF, "编号,名称,总站点数,总公里数,总耗时,起始站点编号,终止站点编号,负责人姓名,负责人办公室电话,负责人移动电话,负责人电子邮箱\n");
+    fprintf(saveF, " ,编号,名称,总站点数,总公里数,总耗时,起始站点编号,终止站点编号,负责人姓名,负责人办公室电话,负责人移动电话,负责人电子邮箱\n");
 
     route * routeP = routeHeadP;
     while (routeP != NULL){
-        fprintf(saveF,"%s,%s,%d,%f,%f,%s,%s,%s,%s,%s,%s\n",routeP->routeID, routeP->name, routeP->siteNums, routeP->miles, routeP->period, routeP->startSite, routeP->endSite, routeP->adminName, routeP->tel, routeP->mTel, routeP->email);
+        fprintf(saveF,",%s,%s,%d,%f,%f,%s,%s,%s,%s,%s,%s\n",routeP->routeID, routeP->name, routeP->siteNums, routeP->miles, routeP->period, routeP->startSite, routeP->endSite, routeP->adminName, routeP->tel, routeP->mTel, routeP->email);
         routeP = routeP->next;
     }
 
-    fprintf(saveF, "\n所有站点信息：\n");
+    fprintf(saveF, "\n\n所有站点信息：\n");
     routeP = routeHeadP;
     while (routeP != NULL){
         site * siteP = routeP->firstSite;
-        fprintf(saveF, "\n\n路线%s 的站点信息：\n", routeP->routeID);
-        fprintf(saveF, "固定配送路线编号,序号,编号,名称,与起始站点距离,与上一个站点距离,与上一个站点交通耗时,停留耗时,经过本站点固定路线编号\n");
+        fprintf(saveF, "\n ,路线%s 的站点信息：\n", routeP->routeID);
+        fprintf(saveF, " ,固定配送路线编号,序号,编号,名称,与起始站点距离,与上一个站点距离,与上一个站点交通耗时,停留耗时,经过本站点固定路线编号\n");
         while (siteP != NULL){
-            fprintf(saveF, "%s,%d,%s,%s,%f,%f,%f,%f,%s\n",siteP->routeID,siteP->siteSID, siteP->siteID, siteP->siteName, siteP->d2Start, siteP->d2Last, siteP->time2Last, siteP->waitTime, siteP->routeIDArray);
+            fprintf(saveF, " ,%s,%d,%s,%s,%f,%f,%f,%f,%s\n",siteP->routeID,siteP->siteSID, siteP->siteID, siteP->siteName, siteP->d2Start, siteP->d2Last, siteP->time2Last, siteP->waitTime, siteP->routeIDArray);
             siteP = siteP->next;
         }
         routeP = routeP->next;
     }
 
-    fprintf(saveF, "\n所有车辆信息：\n");
+    fprintf(saveF, "\n\n所有车辆信息：\n");
     routeP = routeHeadP;
     while (routeP != NULL){
-        site * siteP = routeHeadP->firstSite;
+        site * siteP = routeP->firstSite;
         while (siteP != NULL){
             car * carP = siteP->carHeadP;
-            fprintf(saveF, "\n\n站点%s 的车辆信息：\n", siteP->siteID);
-            fprintf(saveF, "车辆牌照,执行配送路线编号,司机姓名,司机移动电话,载货种类,载货容量,卸货种类,卸货容量\n");
+            fprintf(saveF, "\n ,站点%s 的车辆信息：\n", siteP->siteID);
+            fprintf(saveF, " ,车辆牌照,执行配送路线编号,司机姓名,司机移动电话,载货种类,载货容量,卸货种类,卸货容量\n");
             while (carP != NULL){
-                fprintf(saveF, "%s,%s,%s,%s", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
+                fprintf(saveF, " ,%s,%s,%s,%s", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
                 good * goodP = carP->good;
                 if (goodP != NULL){
-                    fprintf(saveF, ",%s,%f,%s,%f", goodP->uploadType, goodP->upVolume, goodP->downloadType, goodP->downVolume);
+                    fprintf(saveF, " ,%s,%f,%s,%f", goodP->uploadType, goodP->upVolume, goodP->downloadType, goodP->downVolume);
                 }
                 fprintf(saveF, "\n");
                 carP = carP->next;
@@ -1088,10 +1088,61 @@ void makeCsv(route * routeHeadP){
         routeP = routeP->next;
     }
 
+    fprintf(saveF, "\n\n统计信息：\n\n");
+
+    fprintf(saveF, " ,路线总数：,%d\n",sizeRouteList(routeHeadP));
+
+    int sitesCount = 0;routeP = routeHeadP;
+    while(routeP != NULL){
+        sitesCount = sitesCount + sizeSiteList(routeP->firstSite);
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,站点总数：,%d\n", sitesCount);
+
+    int carsCount = 0;routeP = routeHeadP;
+    while (routeP != NULL){
+        site * siteP = routeP->firstSite;
+        while (siteP != NULL){
+            carsCount = carsCount + sizeCarList(siteP->carHeadP);
+            siteP = siteP->next;
+        }
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,车辆总数：,%d\n\n", carsCount);
 
 
+    float mileSum = 0;routeP = routeHeadP;
+    while (routeP != NULL){
+        mileSum = mileSum + routeP->miles;
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,路线总里程：,%.4f\n", mileSum);
+    fprintf(saveF, " ,路线平均里程：,%.4f\n", mileSum/sizeRouteList(routeHeadP));
 
+    char StringTemp[50];
+    float tempFloat = -1;
+    routeP = routeHeadP;
+    while (routeP != NULL){
+        if (routeP->period > tempFloat){
+            tempFloat = routeP->miles;
+            strcpy(StringTemp, routeP->routeID);
+        }
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,最长里程数：,%.4f,来自路线,%s\n", tempFloat, StringTemp);
 
+    tempFloat = 99999;
+    routeP = routeHeadP;
+    while (routeP != NULL){
+        if (routeP->period < tempFloat){
+            tempFloat = routeP->miles;
+            strcpy(StringTemp, routeP->routeID);
+        }
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,最短里程数：,%.4f,来自路线,%s\n", tempFloat, StringTemp);
+
+    
 
     fclose(saveF);
     printf("报表已经保存在程序的根目录。\n");
