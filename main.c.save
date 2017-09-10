@@ -11,6 +11,8 @@
 //TODO: 报告
 
 route * initData();
+void printSomeSpace(int num);
+void printSomeG(int num);
 
 void printFronPage();
 void printPowerBy();
@@ -45,7 +47,7 @@ int main() {
 	route* routeHeadP;
 	routeHeadP = initData();//初始化数据入链表
 	char *url = malloc(sizeof(char) * 20);//开辟空间待使用
-
+    int space = 60;
 	initConsole();
 
 	while (1) {
@@ -62,24 +64,24 @@ int main() {
 				int seq = 0;
 
 				if (input2 == 1) {
-					printf("想详细查看第几条路线的站点信息：");
+					printSomeSpace(space);printf("想详细查看第几条路线的站点信息：");
 					seq = 0; scanf("%d%*c", &seq);
 					route * routeSpecific = getRoutePointer(routeHeadP, seq - 1);
 					if (routeSpecific != NULL){
 					    printSitePage(getRoutePointer(routeHeadP, seq - 1), routeHeadP);//进入该函数内部
 					} else {
-                        printf("错误输入");
+                        printSomeSpace(space);printf("错误输入\n");
 					}
 
 				} else if (input2 == 2) {
-					printf("想修改第几条路线：");
+					printSomeSpace(space);printf("想修改第几条路线：");
 					seq = 0; scanf("%d%*c", &seq);
 					changeRoute(getRoutePointer(routeHeadP, seq-1));
 					updateRoutesFILE(routeHeadP);
 					MessageBox(NULL, TEXT("成功修改路线"), TEXT("操作成功"), MB_OK);
 					system("cls");
 				} else if (input2 == 3) {
-					printf("想删除第几条路线：");
+					printSomeSpace(space);printf("想删除第几条路线：");
 					seq = 0; scanf("%d%*c", &seq);
 					//删除对应的存档文件 TODO：深层筛选未重复站点删除
 					strcpy(url, "save/");
@@ -113,7 +115,7 @@ int main() {
 			continue;
 		} else {
 			system("cls");
-			printf("输入错误指令\n");
+			printSomeSpace(space);printf("输入错误指令\n");
 		}
 	}
 	free(url);
@@ -124,24 +126,26 @@ int main() {
 void quickQuery(route * routeHeadP){
     route * routeP = routeHeadP;
     system("cls");
-    system("date /T");
-	printf("-------------------快速查询----------------------\n");
-	printf("|\t1.查询指定司机的载货卸货情况\t\t|\n");
-	printf("|\t2.查询指定车辆的司机联系方式\t\t|\n");
-	printf("|\t3.查询指定车辆的配送路线\t\t|\n");
-	printf("|\t4.查询经停某站点的所有路线\t\t|\n");
-	printf("|\t5.查询耗时最长的路线\t\t\t|\n");
-	printf("|\t6.查询耗时最短的路线\t\t\t|\n");
-	printf("|\t7.查询公里数最长的路线\t\t\t|\n");
-	printf("|\t8.查询公里数最短的路线\t\t\t|\n");
-	printf("-------------------------------------------------\n");
-	int seq = 0;scanf("%d%*c",&seq);
+    printSomeSpace(60);system("date /T");
+	printSomeSpace(60);printf("-------------------快速查询----------------------\n");
+	printSomeSpace(60);printf("|\t1.查询指定司机的载货卸货情况\t\t|\n");
+	printSomeSpace(60);printf("|\t2.查询指定车辆的司机联系方式\t\t|\n");
+	printSomeSpace(60);printf("|\t3.查询指定车辆的配送路线\t\t|\n");
+	printSomeSpace(60);printf("|\t4.查询经停某站点的所有路线\t\t|\n");
+	printSomeSpace(60);printf("|\t5.查询耗时最长的路线\t\t\t|\n");
+	printSomeSpace(60);printf("|\t6.查询耗时最短的路线\t\t\t|\n");
+	printSomeSpace(60);printf("|\t7.查询公里数最长的路线\t\t\t|\n");
+	printSomeSpace(60);printf("|\t8.查询公里数最短的路线\t\t\t|\n");
+	printSomeSpace(60);printf("-------------------------------------------------\n");
+	int seq = 0;printSomeSpace(60);scanf("%d%*c",&seq);
 	char input[21];
 	float tempFloat = 0;
 	int isSuccessful = 0;
+	printf("\n");
+	printSomeSpace(60);
 	switch (seq){
 	case 1:
-	    printf("\n请输入司机姓名：");
+	    printf("请输入司机姓名：");
 	    noNfgets(input, 20, stdin);
 	    l4:while (routeP != NULL){
             site* siteP = routeP->firstSite;
@@ -149,6 +153,7 @@ void quickQuery(route * routeHeadP){
                 car* carP = siteP->carHeadP;
                 while (carP != NULL){
                     if(strcmp(input, carP->driverName) == 0){
+                        printSomeSpace(60);
                         if (carP->good != NULL){
                             printf("司机 %s载货了容量为%.3f的%s，卸货了容量为%.3f的%s\n", input, carP->good->upVolume, carP->good->uploadType, carP->good->downVolume, carP->good->downloadType);
                         } else {
@@ -168,7 +173,7 @@ void quickQuery(route * routeHeadP){
 	    }
 	    break;
     case 2:
-        printf("\n请输入车辆牌照：");
+        printf("请输入车辆牌照：");
         noNfgets(input, 20, stdin);
         l3:while (routeP != NULL){
             site* siteP = routeP->firstSite;
@@ -176,7 +181,7 @@ void quickQuery(route * routeHeadP){
                 car* carP = siteP->carHeadP;
                 while (carP != NULL){
                     if (strcmp(carP->carID, input) == 0){
-                        printf("车辆%s的司机%s的联系方式为%s\n", input, carP->driverName, carP->driverTel);
+                        printSomeSpace(60);printf("车辆%s的司机%s的联系方式为%s\n", input, carP->driverName, carP->driverTel);
                         isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
@@ -191,7 +196,7 @@ void quickQuery(route * routeHeadP){
 	    }
 	    break;
     case 3:
-        printf("\n请输入车辆牌照：");
+        printf("请输入车辆牌照：");
         noNfgets(input, 20, stdin);
         l2:while (routeP != NULL){
             site* siteP = routeP->firstSite;
@@ -199,7 +204,7 @@ void quickQuery(route * routeHeadP){
                 car* carP = siteP->carHeadP;
                 while (carP != NULL){
                     if (strcmp(carP->carID, input) == 0){
-                        printf("车辆%s的配送路线为%s\n", input, carP->routeID);
+                        printSomeSpace(60);printf("车辆%s的配送路线为%s\n", input, carP->routeID);
                         isSuccessful = 1;
                         carP = NULL;
                         siteP = NULL;
@@ -214,13 +219,13 @@ void quickQuery(route * routeHeadP){
 	    }
 	    break;
     case 4:
-        printf("\n请输入站点编号：");
+        printf("请输入站点编号：");
         noNfgets(input, 20, stdin);
         l1:while (routeP != NULL){
             site * siteP = routeP->firstSite;
             while (siteP != NULL){
                 if (strcmp(siteP->siteID, input) == 0){
-                    printf("经停站点%s的所有路线:%s\n", input, siteP->routeIDArray);
+                    printSomeSpace(60);printf("经停站点%s的所有路线:%s\n", input, siteP->routeIDArray);
                     isSuccessful = 1;
                     siteP = NULL;
                     routeP = NULL;//jump out from loops
@@ -283,16 +288,15 @@ void quickQuery(route * routeHeadP){
 	    break;
 	}
     if (!isSuccessful){
-        printf("找不到相关信息\n");
+        printSomeSpace(60);printf("找不到相关信息\n");
     }
-    system("pause");
+    printSomeSpace(60);system("pause");
 }
 
 void initConsole(){
-    COORD size = {120, 25};
+    system("mode con:cols=175 lines=30");
     system("color 3B");
     SetConsoleTitle("物流信息管理系统");
-    SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), size);
 }
 /*初始化数据*/
 route * initData() {
@@ -359,12 +363,13 @@ route * initData() {
 }
 
 void printFronPage() {
-    system("date /T");
-	printf("-------------------------------------------------\n");
-	printf("|欢迎来到物流信息管理系统，按对应数字进入功能\t|\n");
-	printf("|\t1.进入系统\t\t\t\t|\n");
-	printf("|\t2.制作者信息\t\t\t\t|\n");
-	printf("-------------------------------------------------\n");
+	printSomeSpace(60);
+    system("date /T");printSomeSpace(60);
+	printf("----------------------------------------------------\n");printSomeSpace(60);
+	printf("|欢迎来到物流信息管理系统，按对应数字进入功能\t|\n");printSomeSpace(60);
+	printf("|\t1.进入系统\t\t\t\t\t|\n");printSomeSpace(60);
+	printf("|\t2.制作者信息\t\t\t\t\t|\n");printSomeSpace(60);
+	printf("----------------------------------------------------\n");printSomeSpace(60);
 }
 
 void printPowerBy() {
@@ -376,7 +381,9 @@ void printRoutePage(route * routeHeadP) {
 	route * routeP = routeHeadP;
 	system("cls");
 	system("date /T");
-	printf("------------------所有路线信息-------------------\n");
+
+	printSomeG(75);printf("所有路线信息");printSomeG(76);printf("\n");//title
+
 	char first[] = "编号";
 	char second[] = "名称";
 	char third[] = "站点数";
@@ -388,8 +395,8 @@ void printRoutePage(route * routeHeadP) {
 	char ninth[] = "固定电话";
 	char tenth[] = "移动电话";
 	char eleventh[] = "电子邮箱";
-	printf("|  %-6s %-20s %-6s %-10s %-10s %-10s %-10s %-8s %-8s %-11s %-50s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
-
+	printf("|  %-6s %-20s %-6s %-10s %-10s %-10s %-10s %-8s %-8s %-11s %-50s|\n", first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh);
+    printf("|");printSomeSpace(161);printf("|\n");
 	register int i = 1;
 	while (routeP != NULL) {
 		printf("|%d:",i);
@@ -397,15 +404,18 @@ void printRoutePage(route * routeHeadP) {
 		routeP = routeP->next;
 		i++;
 	}
-	printf("-------------------------------------------------\n");
-	printf("|\t1.查看路线具体信息\t\t\t|\n");
-	printf("|\t2.进行修改\t\t\t\t|\n");
-	printf("|\t3.进行删除\t\t\t\t|\n");
-	printf("|\t4.进行增添\t\t\t\t|\n");
-	printf("|\t5.快速查询\t\t\t\t|\n");
-	printf("|\t6.生成统计报表\t\t\t\t|\n");
-	printf("|\t7.返回上级菜单\t\t\t\t|\n");
-	printf("----------------按数字选择功能-------------------\n");
+	int space = 60;
+	printSomeG(163);
+	printf("\n");
+	printSomeSpace(space);
+	printf("|\t1.查看路线具体信息\t\t\t|\n");printSomeSpace(space);
+	printf("|\t2.进行修改\t\t\t\t|\n");printSomeSpace(space);
+	printf("|\t3.进行删除\t\t\t\t|\n");printSomeSpace(space);
+	printf("|\t4.进行增添\t\t\t\t|\n");printSomeSpace(space);
+	printf("|\t5.快速查询\t\t\t\t|\n");printSomeSpace(space);
+	printf("|\t6.生成统计报表\t\t\t\t|\n");printSomeSpace(space);
+	printf("|\t7.返回上级菜单\t\t\t\t|\n");printSomeSpace(space);
+	printf("--------------按数字选择功能-----------------\n");printSomeSpace(space);
 }
 
 //rewrite file from list
@@ -464,11 +474,12 @@ void addRoute(route * routeHeadP) {
 	route * newRouteP = AddRouteNode(routeHeadP, sizeRouteList(routeHeadP));
 	if (newRouteP != NULL) {
 		char inputTemp[51];
+		printSomeSpace(60);
 		printf("---------------请输入新路线的信息----------------\n");
-		printf("请输入编号:");
+		printSomeSpace(60);printf("请输入编号:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->routeID, inputTemp);
-		printf("请输入名称:");
+		printSomeSpace(60);printf("请输入名称:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->name, inputTemp);
 
@@ -476,30 +487,30 @@ void addRoute(route * routeHeadP) {
 
 		newRouteP->siteNums = 0;//auto complete siteConut. default -> 0;
 
-		printf("请输入总公里数:");
+		printSomeSpace(60);printf("请输入总公里数:");
 		float fMiles = 0;
 		scanf("%f%*c", &fMiles);
 		newRouteP->miles = fMiles;
-		printf("请输入总耗时:");
+		printSomeSpace(60);printf("请输入总耗时:");
 		float fPeriod = 0;
 		scanf("%f%*c", &fPeriod);
 		newRouteP->period = fPeriod;
-		printf("请输入起始站点编号:");
+		printSomeSpace(60);printf("请输入起始站点编号:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->startSite, inputTemp);
-		printf("请输入终止站点编号:");
+		printSomeSpace(60);printf("请输入终止站点编号:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->endSite, inputTemp);
-		printf("请输入负责人姓名:");
+		printSomeSpace(60);printf("请输入负责人姓名:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->adminName, inputTemp);
-		printf("请输入负责人办公室电话:");
+		printSomeSpace(60);printf("请输入负责人办公室电话:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->tel, inputTemp);
-		printf("请输入负责人移动电话:");
+		printSomeSpace(60);printf("请输入负责人移动电话:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->mTel, inputTemp);
-		printf("请输入负责人电子邮箱:");
+		printSomeSpace(60);printf("请输入负责人电子邮箱:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->email, inputTemp);
 	} else {
@@ -509,7 +520,7 @@ void addRoute(route * routeHeadP) {
 }
 site* addSite(site * siteHeadP, char* routeIDIN){
     printf("---------------请输入新站点的信息----------------\n");
-	printf("请输入新站点在路线中的序号:");//新站点的位置
+	printSomeSpace(60);printf("请输入新站点在路线中的序号:");//新站点的位置
 	int seq = 0; scanf("%d%*c", &seq);
 
     int flag = 0;
@@ -524,30 +535,30 @@ site* addSite(site * siteHeadP, char* routeIDIN){
 	if (newSiteP != NULL) {
 	    newSiteP->carHeadP = NULL;
 		char inputTemp[51];
-		printf("请输入站点编号:");
+		printSomeSpace(60);printf("请输入站点编号:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newSiteP->siteID, inputTemp);
 
-		printf("请输入站点名称:");
+		printSomeSpace(60);printf("请输入站点名称:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newSiteP->siteName, inputTemp);
 
-		printf("请输入与上一个站点距离:");
+		printSomeSpace(60);printf("请输入与上一个站点距离:");
 		float d2L = 0;
 		scanf("%f%*c", &d2L);
 		newSiteP->d2Last = d2L;
 
-		printf("请输入与上一个站点交通耗时:");
+		printSomeSpace(60);printf("请输入与上一个站点交通耗时:");
 		float fPeriod = 0;
 		scanf("%f%*c", &fPeriod);
 		newSiteP->time2Last = fPeriod;
 
-		printf("请输入停留耗时:");
+		printSomeSpace(60);printf("请输入停留耗时:");
 		float waitTimeN = 0;
 		scanf("%f%*c", &waitTimeN);
 		newSiteP->waitTime = waitTimeN;
 
-		printf("请输入经过本站点固定路线编号:");
+		printSomeSpace(60);printf("请输入经过本站点固定路线编号:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newSiteP->routeIDArray, inputTemp);
 
@@ -577,7 +588,7 @@ site* addSite(site * siteHeadP, char* routeIDIN){
         }
 	} else {
 		system("cls");
-		printf("addSite error\n");
+		printSomeSpace(60);printf("addSite error\n");
 		return NULL;
 	}
 }
@@ -641,14 +652,16 @@ char* noNfgets(char * Buffer, int MaxConut, FILE* Stream) {
 }
 
 int changeRoute(route * routeSpecific) {
+    printSomeSpace(60);
 	printf("-------------------------------------------------\n");
-	printf("1.编号\n2.名称\n3.总公里数\n4.总耗时\n5.起始站点编号\n6.终止站点编号\n7.负责人姓名\n8.负责人办公室电话\n9.负责人移动电话\n10.负责人电子邮箱\n\n请选择你要修改的属性:");
+	char temp[] = " ";
+	printf("%60s1.编号\n%60s2.名称\n%60s3.总公里数\n%60s4.起始站点编号\n%60s5.终止站点编号\n%60s6.负责人姓名\n%60s7.负责人办公室电话\n%60s8.负责人移动电话\n%60s8.负责人电子邮箱\n\n%60s请选择你要修改的属性:",temp,temp,temp,temp,temp,temp,temp,temp,temp,temp,temp);
 	int choose = 0;
 	scanf("%d%*c", &choose);
 	char input[51];//no free
 	switch (choose) {
 	case 1:
-		printf("请输入新的编号:");
+		printSomeSpace(60);printf("请输入新的编号:");
 		char * oldID = (char *)malloc(sizeof(char) * 30);
 		strcpy(oldID, routeSpecific->routeID);
 		noNfgets(input, 50, stdin);
@@ -659,49 +672,44 @@ int changeRoute(route * routeSpecific) {
 		free(oldID);
 		break;
 	case 2:
-		printf("请输入新的名称:");
+		printSomeSpace(60);printf("请输入新的名称:");
 		noNfgets(input, 50, stdin);
 		strcpy(routeSpecific->name, input);
 		break;
 	case 3:
-		printf("请输入新的总公里数:");
+		printSomeSpace(60);printf("请输入新的总公里数:");
 		float newMiles = 0;
 		scanf("%f%*c", &newMiles);
 		routeSpecific->miles = newMiles;
 		break;
+    routeSpecific->period = 0;
 	case 4:
-		printf("请输入新的总耗时:");
-		float newPeriod = 0;
-		scanf("%f%*c", &newPeriod);
-		routeSpecific->period = newPeriod;
-		break;
-	case 5:
-		printf("请输入新的起始站点编号:");
+		printSomeSpace(60);printf("请输入新的起始站点编号:");
 		noNfgets(input, 50, stdin);
 		strcpy(routeSpecific->startSite, input);
 		break;
-	case 6:
-		printf("请输入新的终止站点编号:");
+	case 5:
+		printSomeSpace(60);printf("请输入新的终止站点编号:");
 		noNfgets(input, 50, stdin);
 		strcpy(routeSpecific->endSite, input);
 		break;
-	case 7:
-		printf("请输入新的负责人姓名:");
+	case 6:
+		printSomeSpace(60);printf("请输入新的负责人姓名:");
 		noNfgets(input, 50, stdin);
 		strcpy(routeSpecific->adminName, input);
 		break;
-	case 8:
-		printf("请输入新的负责人办公室电话:");
+	case 7:
+		printSomeSpace(60);printf("请输入新的负责人办公室电话:");
 		noNfgets(input, 50, stdin);
 		strcpy(routeSpecific->tel, input);
 		break;
-	case 9:
-		printf("请输入新的负责人移动电话:");
+	case 8:
+		printSomeSpace(60);printf("请输入新的负责人移动电话:");
 		noNfgets(input, 50, stdin);
 		strcpy(routeSpecific->mTel, input);
 		break;
-	case 10:
-		printf("请输入新的负责人电子邮箱:");
+	case 9:
+		printSomeSpace(60);printf("请输入新的负责人电子邮箱:");
 		noNfgets(input, 50, stdin);
 		strcpy(routeSpecific->email, input);
 		break;
@@ -712,11 +720,14 @@ int changeRoute(route * routeSpecific) {
 	return 1;
 }
 int changeSite(site * siteSpecific) {
-	printf("-------------------------------------------------\n");
-	printf("1.站点编号\n2.站点名称\n3.与上一个站点距离\n4.停留耗时\n5.经过本站点的固定路线编号\n\n请选择你要修改的属性:");
+    printSomeSpace(60);
+	printf("----------------------------------------------\n");
+	char space[] = " ";
+	printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.与上一个站点距离\n%60s4.停留耗时\n%60s5.经过本站点的固定路线编号\n\n%60s请选择你要修改的属性:",space,space,space,space,space,space);
 	int choose = 0;
 	scanf("%d%*c", &choose);
 	char input[50];//auto free
+	printSomeSpace(60);
 	switch (choose) {
 	case 1:
 		printf("请输入新的站点编号:");
@@ -732,12 +743,6 @@ int changeSite(site * siteSpecific) {
 		noNfgets(input, 50, stdin);
 		strcpy(siteSpecific->siteName, input);
 		break;
-//	case 3:
-//		printf("请输入新的与起始站点距离:");
-//		float d2StartNew = 0;
-//		scanf("%f%*c", &d2StartNew);
-//		siteSpecific->d2Start = d2StartNew;
-//		break;
 	case 3:
 		printf("请输入新的与上一个站点距离:");
 		float d2LastNew = 0;
@@ -756,14 +761,15 @@ int changeSite(site * siteSpecific) {
 		strcpy(siteSpecific->routeIDArray, input);
 		break;
 	default:
-		printf("输入有误!\n");
+		printSomeSpace(60);printf("输入有误!\n");
 		return 0;
 	}
 	return 1;
 }
 int changeCar(car * carSpecific) {
 	printf("-------------------------------------------------\n");
-	printf("1.车辆牌照\n2.司机姓名\n3.司机移动电话\n4.载货货物种类\n5.载货货物容量\n6.卸货货物种类\n7.卸货货物容量\n\n请选择你要修改的属性:");
+	char space[] = " ";
+	printf("%60s1.车辆牌照\n2.司机姓名\n3.司机移动电话\n4.载货货物种类\n5.载货货物容量\n6.卸货货物种类\n7.卸货货物容量\n\n请选择你要修改的属性:");
 	int choose = 0;
 	scanf("%d%*c", &choose);
 	char input[50];//auto free
@@ -823,7 +829,8 @@ void printSitePage(route *routeP, route * routeHeadP) {
 		system("cls");
 		site* siteP = siteHeadP;
 		system("date /T");
-		printf("----------------路线编号：%6s 的所有站点信息---------------\n", siteHeadP->routeID);
+		printSomeG(71);printf("路线编号：%6s 的所有站点信息", siteHeadP->routeID);printSomeG(71);printf("\n");//title
+
 		char second[] = "序号";
 		char third[] = "站点编号";
 		char fourth[] = "站点名称";
@@ -832,23 +839,25 @@ void printSitePage(route *routeP, route * routeHeadP) {
 		char seventh[] = "与上一站交通耗时";
 		char eighth[] = "停留耗时";
 		char ninth[] = "经过本站点的路线编号";
-		printf("|%-4s %-10s %-50s %-12s %-14s %-16s %-8s %-50s|\n\n", second, third, fourth, fifth, sixth, seventh, eighth, ninth);
-
+		printf("|%-4s %-10s %-50s %-12s %-14s %-16s %-8s %-50s|\n", second, third, fourth, fifth, sixth, seventh, eighth, ninth);
+        printf("|");printSomeSpace(171);printf("|\n");
 		while (siteP != NULL) {
 			printf("|%-4d %-10s %-50s %-12.3f %-14.3f %-16.3f %-8.3f %-50s|\n", siteP->siteSID, siteP->siteID, siteP->siteName, siteP->d2Start, siteP->d2Last, siteP->time2Last, siteP->waitTime, siteP->routeIDArray);
 			siteP = siteP->next;
 		}
-		printf("---------------------------------------------------------\n");
-		printf("|\t1.查看站点具体信息\t\t\t|\n");
-		printf("|\t2.进行修改\t\t\t\t|\n");
-		printf("|\t3.进行删除\t\t\t\t|\n");
-		printf("|\t4.进行增添\t\t\t\t|\n");
-		printf("|\t5.返回上级菜单\t\t\t\t|\n");
-		printf("--------------------按数字选择功能-----------------------\n");
+
+		printSomeG(173);printf("\n");
+		printSomeSpace(60);printf("|\t1.查看站点具体信息\t\t\t|\n");
+		printSomeSpace(60);printf("|\t2.进行修改\t\t\t\t|\n");
+		printSomeSpace(60);printf("|\t3.进行删除\t\t\t\t|\n");
+		printSomeSpace(60);printf("|\t4.进行增添\t\t\t\t|\n");
+		printSomeSpace(60);printf("|\t5.返回上级菜单\t\t\t\t|\n");
+		printSomeSpace(60);printf("--------------按数字选择功能-----------------\n");
 
 		int seq = 0;
-		scanf("%d%*c", &seq);
+		printSomeSpace(60);scanf("%d%*c", &seq);
 
+        printSomeSpace(60);
 		switch (seq) {
 		case 1:
 			printf("想查看第几个站点的详细车辆信息：");
@@ -861,6 +870,7 @@ void printSitePage(route *routeP, route * routeHeadP) {
 			changeSite(getSitePointer(siteHeadP, seq - 1));
 			updateSitesFILE(siteHeadP);
 			MessageBox(NULL, TEXT("成功修改站点信息"), TEXT("操作成功"), MB_OK);
+			routeP->period = totalTime(routeP);
 			break;
 		case 3:
 			printf("想删除第几个站点的信息:");
@@ -885,9 +895,11 @@ void printSitePage(route *routeP, route * routeHeadP) {
 			//更新路线站点数信息至链表与存档
 			updateSitesCount(routeP);
             updateRoutesFILE(routeHeadP);
+            routeP->period = totalTime(routeP);
 
 			//TODO: 不方便删除站点数据，应筛选是否有被其他路线占用
 			MessageBox(NULL, TEXT("成功删除站点"), TEXT("操作成功"), MB_OK);
+
 			break;
 		case 4:
 			//增添逻辑
@@ -897,15 +909,9 @@ void printSitePage(route *routeP, route * routeHeadP) {
 			//更新路线站点数信息至链表与存档
 			updateSitesCount(routeP);
             updateRoutesFILE(routeHeadP);
-
+            routeP->period = totalTime(routeP);
 			MessageBox(NULL, TEXT("成功增添站点\n建议继续进入该站点详细信息界面添加站点信息"), TEXT("操作成功"), MB_OK);
-//			//创建对应的站点存档文件，但仍然是空文件。
-//			char *url = malloc(sizeof(char) * 20);
-//			strcpy(url, "save/");
-//			strcat(url, getSitePointer(siteHeadP, sizeSiteList(siteHeadP) - 1)->siteID);
-//			strcat(url, ".txt");
-//			FILE * newF = fopen(url, "w");
-//			fclose(newF);
+
 			break;
 		case 5:
 			inSitePage = 0;
@@ -924,7 +930,7 @@ void printCarPage(site * siteP) {
 		system("cls");
 		car * carP = carHeadP;
 		system("date /T");
-		printf("----------------站点编号：%6s 的所有车辆信息---------------\n", siteP->siteID);
+		printSomeG(65);printf("站点编号：%6s 的所有车辆信息", siteP->siteID);printSomeG(50);printf("\n");
 		char first[] = "车辆牌照";
 		char second[] = "执行路线编号";
 		char third[] = "司机姓名";
@@ -933,23 +939,27 @@ void printCarPage(site * siteP) {
 		char sixth[] = "载货容量";
 		char seventh[] = "卸货种类";
 		char eighth[] = "卸货容量";
-		printf("|%-8s %-12s %-8s %-12s %-10s %-10s %-10s %-10s|\n\n", first, second, third, fourth, fifth, sixth, seventh, eighth);
+		printf("|%-8s %-12s %-8s %-12s %-10s %-10s %-10s %-10s", first, second, third, fourth, fifth, sixth, seventh, eighth);printSomeSpace(57);
+		printf("|\n|");printSomeSpace(144);printf("|\n");
 		while (carP != NULL) {
 			printf("|%-8s %-12s %-8s %-12s ", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
             if (carP->good != NULL){
-                printf("%-10s %-10.3f %-10s %-10.3f|\n", carP->good->uploadType, carP->good->upVolume, carP->good->downloadType, carP->good->downVolume);
-            } else {
-                printf("                                           |\n");
+                printf("%-10s %-10.3f %-10s %-10.3f", carP->good->uploadType, carP->good->upVolume, carP->good->downloadType, carP->good->downVolume);
             }
+            printSomeSpace(57);
+            printf("|\n");
 			carP = carP->next;
 		}//now carP == NULL
-		printf("---------------------------------------------------------\n");
-		printf("|\t1.进行修改\t\t\t\t|\n");
-		printf("|\t2.进行删除\t\t\t\t|\n");
-		printf("|\t3.进行增添\t\t\t\t|\n");
-		printf("|\t4.返回上级菜单\t\t\t\t|\n");
-		printf("--------------------按数字选择功能-----------------------\n");
+		printSomeG(146);printf("\n");
+//		printf("-------------------------------------------------\n");
+		printSomeSpace(60);printf("|\t1.进行修改\t\t\t\t|\n");
+		printSomeSpace(60);printf("|\t2.进行删除\t\t\t\t|\n");
+		printSomeSpace(60);printf("|\t3.进行增添\t\t\t\t|\n");
+		printSomeSpace(60);printf("|\t4.返回上级菜单\t\t\t\t|\n");
+		printSomeSpace(60);printf("--------------按数字选择功能-----------------\n");
+		printSomeSpace(60);
 		int seq = 0; scanf("%d%*c", &seq);
+		printSomeSpace(60);
 		switch (seq) {
 		case 1:
 			printf("想修改第几台车辆的信息:");
@@ -1209,14 +1219,14 @@ void makeCsv(route * routeHeadP){
     fprintf(saveF, " ,最小载货量：,%.4f,%s\n\n", minCarry, minCarID);
 
     //计算配送效率逻辑
-
     fprintf(saveF, " ,平均配送效率：,%.4f\n", tempFloat/mileSum);
-    fprintf(saveF, " ,最高配送效率：,%.4f,%s\n", minCarry, minCarID);
-    fprintf(saveF, " ,最低配送效率：,%.4f,%s\n", minCarry, minCarID);
-    fprintf(saveF, " ,配送效率指载货量与配送时间之比\n");
+    fprintf(saveF, " ,最高配送效率：,%.4f,%s\n", maxEfficiency, maxCarID2);
+    fprintf(saveF, " ,最低配送效率：,%.4f,%s\n", minEfficiency, minCarID2);
+    fprintf(saveF, " ,PS:配送效率指载货量与配送时间之比\n");
+
     fclose(saveF);
-    printf("报表已经保存在程序的根目录。\n");
-    system("pause");
+    MessageBox(NULL, TEXT("报表已经保存在程序的根目录。"), TEXT("操作成功"), MB_OK);
+    printSomeSpace(60);system("pause");
 }
 
 float totalTime(route *routeP){
@@ -1238,4 +1248,27 @@ float getMile(char *routeIDThis, route * routeHeadP){
         routeP = routeP->next;
     }
     return 0;
+}
+//
+//float getTime(site * siteHeadP){
+//    float time = 0;
+//    while (siteP != NULL){
+//        time = siteP->d2Last + siteP->waitTime + time;
+//        siteP = siteP->next;
+//    }
+//    return time
+//}
+
+void printSomeSpace(int num){
+    int i = 0;
+    for (i = 0; i < num; i++){
+        printf(" ");
+    }
+}
+
+void printSomeG(int num){
+    int i = 0;
+    for (i = 0; i < num; i++){
+        printf("-");
+    }
 }
