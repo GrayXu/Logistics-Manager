@@ -6,10 +6,6 @@
 #include <wincon.h>
 #include "shlobj.h"
 
-//TODO: 实现站点在不同路线内重复的解决方案，从而自动增删站点存档
-
-//TODO: 站点距离自动补全
-
 //TODO: 报表 in csv
 
 //TODO: 报告
@@ -42,6 +38,8 @@ void initConsole();
 void quickQuery(route * routeHeadP);
 
 void makeCsv(route * routeHeadP);
+float totalTime(route *routeP);
+float getMile(char *routeIDThis, route * routeHeadP);
 
 int main() {
 	route* routeHeadP;
@@ -1039,10 +1037,6 @@ void updateSitesCount(route * routeSpecific){
 //生成统计报表
 void makeCsv(route * routeHeadP){
     system("cls");
-//    printf("--------------------报表保存路径-------------------------\n");
-//    printf("|\t1.输出到指定路径\t\t\t\t|\n");
-//    printf("|\t2.输出到桌面\t\t\t\t|\n");
-//    printf("--------------------按数字选择功能-----------------------\n");
     FILE * saveF = fopen("物流信息统计报表.csv","w");
     fprintf(saveF, "所有路线信息：\n");
     fprintf(saveF, " ,编号,名称,总站点数,总公里数,总耗时,起始站点编号,终止站点编号,负责人姓名,负责人办公室电话,负责人移动电话,负责人电子邮箱\n");
@@ -1121,7 +1115,7 @@ void makeCsv(route * routeHeadP){
 
     char StringTemp[50];
     float tempFloat = -1;
-    routeP = routeHeadP;
+    routeP = routeHeadP;//比较之前的初始化
     while (routeP != NULL){
         if (routeP->period > tempFloat){
             tempFloat = routeP->miles;
@@ -1129,10 +1123,9 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,最长里程数：,%.4f,来自路线,%s\n", tempFloat, StringTemp);
+    fprintf(saveF, " ,最长里程数：,%.4f,路线%s\n", tempFloat, StringTemp);
 
-    tempFloat = 99999;
-    routeP = routeHeadP;
+    tempFloat = 99999;routeP = routeHeadP;
     while (routeP != NULL){
         if (routeP->period < tempFloat){
             tempFloat = routeP->miles;
@@ -1140,11 +1133,109 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,最短里程数：,%.4f,来自路线,%s\n", tempFloat, StringTemp);
+    fprintf(saveF, " ,最短里程数：,%.4f,路线%s\n\n", tempFloat, StringTemp);
 
-    
+    tempFloat = -1;routeP = routeHeadP;
+    while (routeP != NULL){
+        float timeThis = totalTime(routeP);
+        if (timeThis > tempFloat){
+            tempFloat = timeThis;
+            strcpy(StringTemp, routeP->routeID);
+        }
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,最长耗时：,%.4f,路线%s\n", tempFloat, StringTemp);
 
+    tempFloat = 99999;routeP = routeHeadP;
+    while (routeP != NULL){
+        float timeThis = totalTime(routeP);
+        if (timeThis < tempFloat){
+            tempFloat = timeThis;
+            strcpy(StringTemp, routeP->routeID);
+        }
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,最短耗时：,%.4f,路线%s\n", tempFloat, StringTemp);
+
+    tempFloat = 0;routeP = routeHeadP;
+    while (routeP != NULL){
+        tempFloat = tempFloat + totalTime(routeP);
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,平均耗时：,%.4f\n\n", tempFloat/sizeRouteList(routeHeadP));
+
+
+    //统计载货量逻辑
+    tempFloat = 0;routeP = routeHeadP;
+    float minCarry = 9999;float maxCarry = -1;
+    float minEfficiency = 999;float maxEfficiency = -1;
+    char maxCarID[10];char minCarID[10];
+    char maxCarID2[10];char minCarID2 [10];
+    while (routeP != NULL){
+        site * siteP = routeP->firstSite;
+        while (siteP != NULL){
+            car * carP = siteP->carHeadP;
+            while (carP != NULL){
+                if (carP->good != NULL){
+                    float carryVolume = carP->good->upVolume;
+                    tempFloat = tempFloat + carryVolume;
+                    //更新最大最小载货量数据
+                    if (carryVolume > maxCarry){
+                        maxCarry = carryVolume;
+                        strcpy(maxCarID, carP->carID);
+                    } else if (carryVolume < minCarry){
+                        minCarry = carryVolume;
+                        strcpy(minCarID, carP->carID);
+                    }
+                    //更新最高最低效率数据
+                    float efficiencyThis = carryVolume/getMile(carP->routeID, routeHeadP);
+                    if (efficiencyThis > maxEfficiency){
+                        maxEfficiency = efficiencyThis;
+                        strcpy(maxCarID2, carP->carID);
+                    } else if (efficiencyThis < minEfficiency){
+                        minEfficiency = efficiencyThis;
+                        strcpy(minCarID2, carP->carID);
+                    }
+                }
+                carP = carP->next;
+            }
+            siteP = siteP->next;
+        }
+        routeP = routeP->next;
+    }
+    fprintf(saveF, " ,总载货量：,%.4f\n", tempFloat);
+    fprintf(saveF, " ,平均载货量：,%.4f\n", tempFloat/carsCount);
+    fprintf(saveF, " ,最大载货量：,%.4f,%s\n", maxCarry, maxCarID);
+    fprintf(saveF, " ,最小载货量：,%.4f,%s\n\n", minCarry, minCarID);
+
+    //计算配送效率逻辑
+
+    fprintf(saveF, " ,平均配送效率：,%.4f\n", tempFloat/mileSum);
+    fprintf(saveF, " ,最高配送效率：,%.4f,%s\n", minCarry, minCarID);
+    fprintf(saveF, " ,最低配送效率：,%.4f,%s\n", minCarry, minCarID);
+    fprintf(saveF, " ,配送效率指载货量与配送时间之比\n");
     fclose(saveF);
     printf("报表已经保存在程序的根目录。\n");
     system("pause");
+}
+
+float totalTime(route *routeP){
+    site * siteP = routeP->firstSite;
+    float time = 0;
+    while (siteP != NULL){
+        time = siteP->d2Last + siteP->waitTime + time;
+        siteP = siteP->next;
+    }
+    return time;
+}
+
+float getMile(char *routeIDThis, route * routeHeadP){
+    route *routeP = routeHeadP;
+    while (routeP != NULL){
+        if (strcmp(routeP->routeID, routeIDThis) == 0){
+            return routeP->miles;
+        }
+        routeP = routeP->next;
+    }
+    return 0;
 }
