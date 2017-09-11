@@ -1,5 +1,6 @@
 #include <stdlib.h>
 char** setDoubleCharArray(char** out, char* in);
+
 /**
 * 货物的基本信息：*Type : 装货、卸货的货物的种类
 *                  *Volume	: 货物所占容量，（单位立方米）
@@ -17,8 +18,11 @@ char** readGood(char* in) {
 	strArray[1] = (char*)malloc(sizeof(char) * 10);
 	strArray[2] = (char*)malloc(sizeof(char) * 10);
 	strArray[3] = (char*)malloc(sizeof(char) * 10);
-	setDoubleCharArray(strArray, in);
-	return strArray;
+	if (setDoubleCharArray(strArray, in) != NULL){
+        return strArray;
+	} else {
+        return NULL;
+	}
 }
 
 /**
@@ -47,9 +51,9 @@ char ** readCar(char* in) {
 	if (setDoubleCharArray(strArray, in) != NULL){
         return strArray;
 	} else {
-        return NULL
+        return NULL;
 	}
-	
+
 }
 
 /**
@@ -90,8 +94,11 @@ char** readSite(char* in) {
 	strArray[6] = (char*)malloc(sizeof(char) * 11);
 	strArray[7] = (char*)malloc(sizeof(char) * 11);
 	strArray[8] = (char*)malloc(sizeof(char) * 51);
-	setDoubleCharArray(strArray, in);
-	return strArray;
+	if (setDoubleCharArray(strArray, in) != NULL){
+        return strArray;
+	} else {
+        return NULL;
+	}
 }
 
 /**
@@ -139,8 +146,11 @@ char** readRoute(char* in) {
 	strArray[8] = (char*)malloc(sizeof(char) * 9);
 	strArray[9] = (char*)malloc(sizeof(char) * 12);
 	strArray[10] = (char*)malloc(sizeof(char) * 51);
-	setDoubleCharArray(strArray, in);
-	return strArray;
+	if (setDoubleCharArray(strArray, in) != NULL){
+        return strArray;
+	} else {
+        return NULL;
+	}
 }
 
 //free stake memory( for the double char array)

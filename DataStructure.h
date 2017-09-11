@@ -1,5 +1,6 @@
 #include <stdlib.h>
 char** setDoubleCharArray(char** out, char* in);
+
 /**
 * 货物的基本信息：*Type : 装货、卸货的货物的种类
 *                  *Volume	: 货物所占容量，（单位立方米）

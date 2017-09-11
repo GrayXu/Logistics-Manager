@@ -4,9 +4,9 @@
 #include <conio.h>
 #include <windows.h>
 #include <wincon.h>
+#include <windef.h>
 #include "shlobj.h"
-
-//TODO: 报表 in csv
+#include <wingdi.h>
 
 //TODO: 报告
 
@@ -44,12 +44,15 @@ float totalTime(route *routeP);
 float getMile(char *routeIDThis, route * routeHeadP);
 
 int main() {
+
 	route* routeHeadP;
 	routeHeadP = initData();//初始化数据入链表
 	char *url = malloc(sizeof(char) * 20);//开辟空间待使用
     int space = 60;
+
 	initConsole();
 
+    //主函数里包含了第一层信息展示
 	while (1) {
 	    printFronPage();
 
@@ -123,6 +126,7 @@ int main() {
 	return 0;
 }
 
+//快速查询实现逻辑
 void quickQuery(route * routeHeadP){
     route * routeP = routeHeadP;
     system("cls");
@@ -293,12 +297,15 @@ void quickQuery(route * routeHeadP){
     printSomeSpace(60);system("pause");
 }
 
+//初始化控制台，进行一些个性化设置
 void initConsole(){
+//    HWND hwnd=GetForegroundWindow();
     system("mode con:cols=175 lines=30");
     system("color 3B");
     SetConsoleTitle("物流信息管理系统");
 }
-/*初始化数据*/
+
+/*初始化数据，读取存档*/
 route * initData() {
 	FILE *fRouteP = fopen("save/routes.txt", "r");
 	route * routeHeadP = NULL;
@@ -362,21 +369,91 @@ route * initData() {
 	return routeHeadP;
 }
 
+//输出首页
 void printFronPage() {
 	printSomeSpace(60);
     system("date /T");printSomeSpace(60);
 	printf("----------------------------------------------------\n");printSomeSpace(60);
 	printf("|欢迎来到物流信息管理系统，按对应数字进入功能\t|\n");printSomeSpace(60);
+
+//	HWND hWnd = GetConsoleWindow();
+//        HFONT font = CreateFont(
+//                20, // nHeight
+//                0, // nWidth
+//                0, // nEscapement
+//                0, // nOrientation
+//                FW_NORMAL, // nWeight
+//                FALSE, // bItalic
+//                FALSE, // bUnderline
+//                0, // cStrikeOut
+//                ANSI_CHARSET, // nCharSet
+//                OUT_DEFAULT_PRECIS, // nOutPrecision
+//                CLIP_DEFAULT_PRECIS, // nClipPrecision
+//                DEFAULT_QUALITY, // nQuality
+//                DEFAULT_PITCH | FF_SWISS,
+//                L"新宋体" // nPitchAndFamily Arial
+//                );
+//
+//
+//
+//        HWND b1 = CreateWindow(
+//                L"BUTTON",   // predefined class
+//                L"进入系统",       // button text
+//                WS_VISIBLE | WS_CHILD,  //values for buttons.
+//                100,         // starting x position
+//                100,         // starting y position
+//                100,        // button width
+//                40,        // button height
+//                hWnd,       // parent window
+//                0,       // No menu
+//                (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+//                NULL);
+//
+//        HWND b2 = CreateWindow(
+//                L"BUTTON",   // predefined class
+//                L"制作者信息",       // button text
+//                WS_VISIBLE | WS_CHILD,  //values for buttons.
+//                240,         // starting x position
+//                100,         // starting y position
+//                100,        // button width
+//                40,        // button height
+//                hWnd,       // parent window
+//                0,       // No menu
+//                (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+//                NULL);
+//
+//        SendMessage(b1, WM_SETFONT, (WPARAM)font, 1);
+//        SendMessage(b2, WM_SETFONT, (WPARAM)font, 1);
+//        MSG msg;
+//        while (GetMessage(&msg, 0, 0, 0)) {
+//
+//                TranslateMessage(&msg);
+//                DispatchMessage(&msg);
+//
+//                if (msg.hwnd==b1 && msg.message== WM_LBUTTONDOWN) {
+////                        break;
+//                }
+//
+//                if (msg.hwnd == b2 && msg.message == WM_LBUTTONDOWN) {
+//                        MessageBox(NULL, TEXT("华中科技大学\nIOT1601 徐光磊\nC语言程序设计_课程设计作品\n物流信息查询系统"), TEXT("制作者信息"), MB_OK);
+//                }
+//        }
 	printf("|\t1.进入系统\t\t\t\t\t|\n");printSomeSpace(60);
 	printf("|\t2.制作者信息\t\t\t\t\t|\n");printSomeSpace(60);
+
+
+
 	printf("----------------------------------------------------\n");printSomeSpace(60);
+
 }
 
+//查看制作者信息逻辑
 void printPowerBy() {
 	system("cls");
 	MessageBox(NULL, TEXT("华中科技大学\nIOT1601 徐光磊\nC语言程序设计_课程设计作品\n物流信息查询系统"), TEXT("制作者信息"), MB_OK);
 }
 
+//输出路线信息
 void printRoutePage(route * routeHeadP) {
 	route * routeP = routeHeadP;
 	system("cls");
@@ -652,7 +729,7 @@ char* noNfgets(char * Buffer, int MaxConut, FILE* Stream) {
 	Buffer[i] = '\0';
 	return returnPointer;
 }
-
+//修改信息逻辑
 int changeRoute(route * routeSpecific) {
     printSomeSpace(60);
 	printf("-------------------------------------------------\n");
@@ -825,6 +902,7 @@ int changeCar(car * carSpecific) {
 	return 1;
 }
 
+//输出站点信息逻辑
 void printSitePage(route *routeP, route * routeHeadP) {
 	int inSitePage = 1;
 	site* siteHeadP = routeP->firstSite;
@@ -926,6 +1004,8 @@ void printSitePage(route *routeP, route * routeHeadP) {
 		system("cls");
 	}
 }
+
+//输出车辆信息
 void printCarPage(site * siteP) {
 	car * carHeadP = siteP->carHeadP;
 	int inCarPage = 1;
@@ -954,7 +1034,6 @@ void printCarPage(site * siteP) {
 			carP = carP->next;
 		}//now carP == NULL
 		printSomeG(146);printf("\n");
-//		printf("-------------------------------------------------\n");
 		printSomeSpace(60);printf("|\t1.进行修改\t\t\t\t|\n");
 		printSomeSpace(60);printf("|\t2.进行删除\t\t\t\t|\n");
 		printSomeSpace(60);printf("|\t3.进行增添\t\t\t\t|\n");
@@ -1117,7 +1196,7 @@ void makeCsv(route * routeHeadP){
     }
     fprintf(saveF, " ,车辆总数：,%d\n\n", carsCount);
 
-
+    //计算里程逻辑
     float mileSum = 0;routeP = routeHeadP;
     while (routeP != NULL){
         mileSum = mileSum + routeP->miles;
@@ -1148,6 +1227,7 @@ void makeCsv(route * routeHeadP){
     }
     fprintf(saveF, " ,最短里程数：,%.4f,路线%s\n\n", tempFloat, StringTemp);
 
+    //计算耗时逻辑
     tempFloat = -1;routeP = routeHeadP;
     while (routeP != NULL){
         float timeThis = totalTime(routeP);
@@ -1231,6 +1311,7 @@ void makeCsv(route * routeHeadP){
     MessageBox(NULL, TEXT("报表已经保存在程序的根目录。"), TEXT("操作成功"), MB_OK);
 }
 
+//从传入的参数对应的路线中计算准确的耗时数据
 float totalTime(route *routeP){
     site * siteP = routeP->firstSite;
     float time = 0;
@@ -1240,7 +1321,7 @@ float totalTime(route *routeP){
     }
     return time;
 }
-
+//从传入的路线链表中寻找对应字符串参数的数据的里程
 float getMile(char *routeIDThis, route * routeHeadP){
     route *routeP = routeHeadP;
     while (routeP != NULL){
@@ -1251,23 +1332,14 @@ float getMile(char *routeIDThis, route * routeHeadP){
     }
     return 0;
 }
-//
-//float getTime(site * siteHeadP){
-//    float time = 0;
-//    while (siteP != NULL){
-//        time = siteP->d2Last + siteP->waitTime + time;
-//        siteP = siteP->next;
-//    }
-//    return time
-//}
-
+//批量输出空格
 void printSomeSpace(int num){
     int i = 0;
     for (i = 0; i < num; i++){
         printf(" ");
     }
 }
-
+//批量输出Gang 杠号
 void printSomeG(int num){
     int i = 0;
     for (i = 0; i < num; i++){
