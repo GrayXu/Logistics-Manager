@@ -10,6 +10,8 @@
 
 //TODO: 报告
 
+int selectRow = 1;
+
 route * initData();
 void printSomeSpace(int num);
 void printSomeG(int num);
@@ -19,12 +21,13 @@ void printPowerBy();
 void printRoutePage(route * routeHeadP);
 void printSitePage(route *routeP, route * routeHeadP);
 void printCarPage(site * siteP);
+void quickQuery(route * routeHeadP);
 
 void addRoute(route * routeHeadP);
 car* addCar(car * carHeadP);
 site* addSite(site * siteHeadP, char* routeIDIN);
 
-int changeSite(site * siteSpecific);
+int changeSite(site * siteSpecific, int notFirst, site * siteHeadP);
 int changeRoute(route * routeSpecial);
 int changeCar(car * carSpecific);
 
@@ -37,11 +40,16 @@ void changeOldRouteID(route * routeSpecific);
 int changeSaveName(char* old, char* new);
 void updateSitesCount(route * routeSpecific);
 void initConsole();
-void quickQuery(route * routeHeadP);
 
 void makeCsv(route * routeHeadP);
 float totalTime(route *routeP);
 float getMile(char *routeIDThis, route * routeHeadP);
+float totalMile(route *routeP);
+void updateAlld2S(site * siteP);
+
+void LocSubMenu(int num, SMALL_RECT *rc);
+
+
 
 int main() {
 
@@ -300,7 +308,6 @@ void quickQuery(route * routeHeadP){
 //初始化控制台，进行一些个性化设置
 void initConsole(){
 //    HWND hwnd=GetForegroundWindow();
-//    int x=GetSystemMetrics(SM_CXSCREEN)+300, y=GetSystemMetrics(SM_CYSCREEN)+300;
     system("mode con:cols=175 lines=30");
     system("color 3B");
     SetConsoleTitle("物流信息管理系统");
@@ -376,82 +383,16 @@ void printFronPage() {
     system("date /T");printSomeSpace(60);
 	printf("----------------------------------------------------\n");printSomeSpace(60);
 	printf("|欢迎来到物流信息管理系统，按对应数字进入功能\t|\n");printSomeSpace(60);
-
-//	HWND hWnd = GetConsoleWindow();
-//        HFONT font = CreateFont(
-//                20, // nHeight
-//                0, // nWidth
-//                0, // nEscapement
-//                0, // nOrientation
-//                FW_NORMAL, // nWeight
-//                FALSE, // bItalic
-//                FALSE, // bUnderline
-//                0, // cStrikeOut
-//                ANSI_CHARSET, // nCharSet
-//                OUT_DEFAULT_PRECIS, // nOutPrecision
-//                CLIP_DEFAULT_PRECIS, // nClipPrecision
-//                DEFAULT_QUALITY, // nQuality
-//                DEFAULT_PITCH | FF_SWISS,
-//                L"新宋体" // nPitchAndFamily Arial
-//                );
-//
-//
-//
-//        HWND b1 = CreateWindow(
-//                L"BUTTON",   // predefined class
-//                L"进入系统",       // button text
-//                WS_VISIBLE | WS_CHILD,  //values for buttons.
-//                100,         // starting x position
-//                100,         // starting y position
-//                100,        // button width
-//                40,        // button height
-//                hWnd,       // parent window
-//                0,       // No menu
-//                (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
-//                NULL);
-//
-//        HWND b2 = CreateWindow(
-//                L"BUTTON",   // predefined class
-//                L"制作者信息",       // button text
-//                WS_VISIBLE | WS_CHILD,  //values for buttons.
-//                240,         // starting x position
-//                100,         // starting y position
-//                100,        // button width
-//                40,        // button height
-//                hWnd,       // parent window
-//                0,       // No menu
-//                (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
-//                NULL);
-//
-//        SendMessage(b1, WM_SETFONT, (WPARAM)font, 1);
-//        SendMessage(b2, WM_SETFONT, (WPARAM)font, 1);
-//        MSG msg;
-//        while (GetMessage(&msg, 0, 0, 0)) {
-//
-//                TranslateMessage(&msg);
-//                DispatchMessage(&msg);
-//
-//                if (msg.hwnd==b1 && msg.message== WM_LBUTTONDOWN) {
-////                        break;
-//                }
-//
-//                if (msg.hwnd == b2 && msg.message == WM_LBUTTONDOWN) {
-//                        MessageBox(NULL, TEXT("华中科技大学\nIOT1601 徐光磊\nC语言程序设计_课程设计作品\n物流信息查询系统"), TEXT("制作者信息"), MB_OK);
-//                }
-//        }
 	printf("|\t1.进入系统\t\t\t\t\t|\n");printSomeSpace(60);
 	printf("|\t2.制作者信息\t\t\t\t\t|\n");printSomeSpace(60);
-
-
-
 	printf("----------------------------------------------------\n");printSomeSpace(60);
 
 }
 
 //查看制作者信息逻辑
 void printPowerBy() {
-	system("cls");
 	MessageBox(NULL, TEXT("华中科技大学\nIOT1601 徐光磊\nC语言程序设计_课程设计作品\n物流信息查询系统"), TEXT("制作者信息"), MB_OK);
+	system("cls");
 }
 
 //输出路线信息
@@ -621,10 +562,7 @@ site* addSite(site * siteHeadP, char* routeIDIN){
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newSiteP->siteName, inputTemp);
 
-		printSomeSpace(60);printf("请输入与上一个站点距离:");
-		float d2L = 0;
-		scanf("%f%*c", &d2L);
-		newSiteP->d2Last = d2L;
+
 
 		printSomeSpace(60);printf("请输入与上一个站点交通耗时:");
 		float fPeriod = 0;
@@ -640,15 +578,24 @@ site* addSite(site * siteHeadP, char* routeIDIN){
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newSiteP->routeIDArray, inputTemp);
 
-	//自动完成部分
-        //自动补全总距离
-		float d2s = 0;
-        site * siteTempP = siteHeadP;
-        while (siteTempP != newSiteP){
-            d2s = d2s + siteTempP->d2Last;
-            siteTempP = siteTempP->next;
+        //总距离
+        if (seq == 1){
+            newSiteP->d2Start = 0;
+            newSiteP->d2Last = 0;
+        } else {
+            printSomeSpace(60);printf("请输入与上一个站点距离:");
+            float d2L = 0;
+            scanf("%f%*c", &d2L);
+            newSiteP->d2Last = d2L;
+            site * siteTempP = siteHeadP;
+            while(siteTempP->next != newSiteP){
+                siteTempP = siteTempP->next;
+            }
+            newSiteP->d2Start = siteTempP->d2Start + d2L;
         }
-        newSiteP->d2Start = d2s;
+        //自动更新其他站点的离起始站点距离
+        updateAlld2S(newSiteP);
+
         //自动补全序号
         newSiteP->siteSID = seq;
 		strcpy(newSiteP->routeID, routeIDIN);
@@ -799,11 +746,15 @@ int changeRoute(route * routeSpecific) {
 	}
 	return 1;
 }
-int changeSite(site * siteSpecific) {
+int changeSite(site * siteSpecific, int notFirst, site * siteHeadP) {
     printSomeSpace(60);
 	printf("----------------------------------------------\n");
 	char space[] = " ";
-	printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.与上一个站点距离\n%60s4.停留耗时\n%60s5.经过本站点的固定路线编号\n\n%60s请选择你要修改的属性:",space,space,space,space,space,space);
+	if (notFirst){
+        printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.经过本站点的固定路线编号\n%60s4.停留耗时\n%60s6.与上一个站点距离\n\n%60s请选择你要修改的属性:",space,space,space,space,space,space);
+	} else {
+	    printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.经过本站点的固定路线编号\n%60s4.停留耗时\n\n%60s请选择你要修改的属性:",space,space,space,space,space);
+	}
 	int choose = 0;
 	scanf("%d%*c", &choose);
 	char input[50];//auto free
@@ -817,34 +768,44 @@ int changeSite(site * siteSpecific) {
 		strcpy(siteSpecific->siteID, input);//向链表内部更新新的编号
 		changeSaveName(oldID, siteSpecific->siteID);//改变其编号对应的存档文件名（联动改变下文
 		free(oldID);
-		break;
+        return 1;
 	case 2:
 		printf("请输入新的站点名称:");
 		noNfgets(input, 50, stdin);
 		strcpy(siteSpecific->siteName, input);
-		break;
+		return 2;
 	case 3:
-		printf("请输入新的与上一个站点距离:");
-		float d2LastNew = 0;
-		scanf("%f%*c", &d2LastNew);
-		siteSpecific->d2Last = d2LastNew;
-		break;
+		printf("请输入新的经过本站点的固定路线编号:");
+		noNfgets(input, 50, stdin);
+		strcpy(siteSpecific->routeIDArray, input);
+		return 3;
 	case 4:
 		printf("请输入新的停留耗时:");
 		float newPeriod = 0;
 		scanf("%f%*c", &newPeriod);
 		siteSpecific->waitTime = newPeriod;
-		break;
-	case 5:
-		printf("请输入新的经过本站点的固定路线编号:");
-		noNfgets(input, 50, stdin);
-		strcpy(siteSpecific->routeIDArray, input);
-		break;
+		return 4;
+	case 6:
+	    if (!notFirst){
+	        printSomeSpace(60);printf("输入有误!\n");
+            return 0;
+	    }
+		printf("请输入新的与上一个站点距离:");
+		float d2LastNew = 0;
+		scanf("%f%*c", &d2LastNew);
+		siteSpecific->d2Last = d2LastNew;
+
+        site * siteCorrectP = siteHeadP;
+        while (siteCorrectP->next != siteSpecific){
+            siteCorrectP = siteCorrectP->next;
+        }
+		updateAlld2S(siteCorrectP);
+
+		return 6;
 	default:
 		printSomeSpace(60);printf("输入有误!\n");
 		return 0;
 	}
-	return 1;
 }
 int changeCar(car * carSpecific) {
 	printSomeSpace(60);printf("-------------------------------------------------\n");
@@ -949,10 +910,19 @@ void printSitePage(route *routeP, route * routeHeadP) {
 		case 2:
 			printf("想修改第几个站点的信息:");
 			scanf("%d%*c", &seq);
-			changeSite(getSitePointer(siteHeadP, seq - 1));
+			int changeWhich = changeSite(getSitePointer(siteHeadP, seq - 1), seq-1, siteHeadP);
 			updateSitesFILE(siteHeadP);
+
 			MessageBox(NULL, TEXT("成功修改站点信息"), TEXT("操作成功"), MB_OK);
-			routeP->period = totalTime(routeP);
+            if (changeWhich == 6){//更改了距离，应更改路线内的总里程和所有被修改站点以后（包括自身）的与起始站点的距离
+                routeP->miles = totalMile(routeP);
+            } else if (changeWhich == 4 || changeWhich == 5){//更改了时间相关
+                routeP->period = totalTime(routeP);
+            } else {
+                break;
+            }
+			updateRoutesFILE(routeHeadP);//update save file
+
 			break;
 		case 3:
 			printf("想删除第几个站点的信息:");
@@ -979,6 +949,10 @@ void printSitePage(route *routeP, route * routeHeadP) {
             updateRoutesFILE(routeHeadP);
             routeP->period = totalTime(routeP);
 
+            //更新路线距离
+            routeP->miles = totalMile(routeP);
+
+            updateRoutesFILE(routeHeadP);//update save file
 			//TODO: 不方便删除站点数据，应筛选是否有被其他路线占用
 			MessageBox(NULL, TEXT("成功删除站点"), TEXT("操作成功"), MB_OK);
 
@@ -990,8 +964,12 @@ void printSitePage(route *routeP, route * routeHeadP) {
 
 			//更新路线站点数信息至链表与存档
 			updateSitesCount(routeP);
-            updateRoutesFILE(routeHeadP);
             routeP->period = totalTime(routeP);
+
+            //更新路线距离
+            routeP->miles = totalMile(routeP);
+
+            updateRoutesFILE(routeHeadP);
 			MessageBox(NULL, TEXT("成功增添站点\n建议继续进入该站点详细信息界面添加站点信息"), TEXT("操作成功"), MB_OK);
 
 			break;
@@ -1312,7 +1290,7 @@ void makeCsv(route * routeHeadP){
     MessageBox(NULL, TEXT("报表已经保存在程序的根目录。"), TEXT("操作成功"), MB_OK);
 }
 
-//从传入的参数对应的路线中计算准确的耗时数据
+//从传入的参数对应的路线中，进入站点数据中去计算准确的耗时数据
 float totalTime(route *routeP){
     site * siteP = routeP->firstSite;
     float time = 0;
@@ -1322,6 +1300,15 @@ float totalTime(route *routeP){
     }
     return time;
 }
+//从传入的参数对应的路线中，进入站点数据中去获得总长度
+float totalMile(route *routeP){
+    site * siteTempP = routeP->firstSite;
+    while (siteTempP->next != NULL){
+        siteTempP = siteTempP->next;
+    }
+    return siteTempP->d2Start;
+}
+
 //从传入的路线链表中寻找对应字符串参数的数据的里程
 float getMile(char *routeIDThis, route * routeHeadP){
     route *routeP = routeHeadP;
@@ -1346,4 +1333,46 @@ void printSomeG(int num){
     for (i = 0; i < num; i++){
         printf("-");
     }
+}
+
+
+/**
+* 更新路线的d2S
+* 传入的站点指针为数据正确的最后一个路线，往后的所有路线都需要进行更新
+*/
+void updateAlld2S(site * siteP){//
+    site * sitePre = siteP;
+    site * siteNext = siteP->next;
+    while (siteNext != NULL){
+        siteNext->d2Start = sitePre->d2Start + siteNext->d2Last;
+        sitePre = siteNext;
+        siteNext = siteNext->next;
+    }
+}
+
+void LocSubMenu(int num, SMALL_RECT *rc){
+//    int i, len, loc = 0;
+//
+//    rc->Top = 1; /*区域的上边定在第2行，行号为1*/
+//    rc->Left = 1;
+//    for (i=1; i<num; i++){   /*计算区域左边界位置, 同时计算第一个子菜单项在子菜单字符串数组中的位置*/
+//        rc->Left += strlen(ga_main_menu[i-1]) + 4;
+//        loc += ga_sub_menu_count[i-1];
+//    }
+//    rc->Right = strlen(ga_sub_menu[loc]);/*暂时存放第一个子菜单项字符串长度*/
+//
+//    for (i=1; i<ga_sub_menu_count[num-1]; i++){   /*查找最长子菜单字符串，将其长度存放在rc->Right*/
+//        len = strlen(ga_sub_menu[loc+i]);
+//        if (rc->Right < len)
+//        {
+//            rc->Right = len;
+//        }
+//    }
+//    rc->Right += rc->Left + 3;  /*计算区域的右边界*/
+//    rc->Bottom = rc->Top + ga_sub_menu_count[num-1] + 1;/*计算区域下边的行号*/
+//    if (rc->Right >= SCR_COL){  /*右边界越界的处理*/
+//        len = rc->Right - SCR_COL + 1;
+//        rc->Left -= len;
+//        rc->Right = SCR_COL - 1;
+//    }
 }
