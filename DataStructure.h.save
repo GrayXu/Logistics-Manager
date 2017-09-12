@@ -9,6 +9,7 @@ typedef struct Good {
 	char uploadType[10];
 	float upVolume;
 	char downloadType[10];
+	char siteID[]
 	float downVolume;
 } good;
 

@@ -38,12 +38,13 @@ typedef struct Car {
 	char routeID[7];
 	char driverName[9];
 	char driverTel[12];
+	char siteID[11];
 	good * good;
 	struct Car * next;
 } car;
 
 char ** readCar(char* in) {
-	char** strArray = (char**)malloc(sizeof(char*) * 9);
+	char** strArray = (char**)malloc(sizeof(char*) * 4);
 	strArray[0] = (char*)malloc(sizeof(char) * 9);
 	strArray[1] = (char*)malloc(sizeof(char) * 7);
 	strArray[2] = (char*)malloc(sizeof(char) * 9);

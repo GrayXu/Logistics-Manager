@@ -49,7 +49,7 @@ void updateAlld2S(site * siteP);
 
 void LocSubMenu(int num, SMALL_RECT *rc);
 
-
+void saveALL(route* routeHeadP);
 
 int main() {
 
@@ -751,9 +751,9 @@ int changeSite(site * siteSpecific, int notFirst, site * siteHeadP) {
 	printf("----------------------------------------------\n");
 	char space[] = " ";
 	if (notFirst){
-        printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.经过本站点的固定路线编号\n%60s4.停留耗时\n%60s6.与上一个站点距离\n\n%60s请选择你要修改的属性:",space,space,space,space,space,space);
+        printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.经过本站点的固定路线编号\n%60s4.停留耗时\n%60s5.与上一站交通耗时\n%60s6.与上一个站点距离\n\n%60s请选择你要修改的属性:",space,space,space,space,space,space,space);
 	} else {
-	    printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.经过本站点的固定路线编号\n%60s4.停留耗时\n\n%60s请选择你要修改的属性:",space,space,space,space,space);
+	    printf("%60s1.站点编号\n%60s2.站点名称\n%60s3.经过本站点的固定路线编号\n%60s4.停留耗时\n%60s5.与上一站交通耗时\n\n%60s请选择你要修改的属性:",space,space,space,space,space,space);
 	}
 	int choose = 0;
 	scanf("%d%*c", &choose);
@@ -785,6 +785,12 @@ int changeSite(site * siteSpecific, int notFirst, site * siteHeadP) {
 		scanf("%f%*c", &newPeriod);
 		siteSpecific->waitTime = newPeriod;
 		return 4;
+    case 5:
+		printf("请输入新的与上一站耗时:");
+		newPeriod = 0;
+		scanf("%f%*c", &newPeriod);
+		siteSpecific->time2Last = newPeriod;
+		return 5;
 	case 6:
 	    if (!notFirst){
 	        printSomeSpace(60);printf("输入有误!\n");
@@ -1110,11 +1116,11 @@ void makeCsv(route * routeHeadP){
     system("cls");
     FILE * saveF = fopen("物流信息统计报表.csv","w");
     fprintf(saveF, "所有路线信息：\n");
-    fprintf(saveF, " ,编号,名称,总站点数,总公里数,总耗时,起始站点编号,终止站点编号,负责人姓名,负责人办公室电话,负责人移动电话,负责人电子邮箱\n");
+    fprintf(saveF, "·,编号,名称,总站点数,总公里数,总耗时,起始站点编号,终止站点编号,负责人姓名,负责人办公室电话,负责人移动电话,负责人电子邮箱\n");
 
     route * routeP = routeHeadP;
     while (routeP != NULL){
-        fprintf(saveF,",%s,%s,%d,%f,%f,%s,%s,%s,%s,%s,%s\n",routeP->routeID, routeP->name, routeP->siteNums, routeP->miles, routeP->period, routeP->startSite, routeP->endSite, routeP->adminName, routeP->tel, routeP->mTel, routeP->email);
+        fprintf(saveF,"·,%s,%s,%d,%f,%f,%s,%s,%s,%s,%s,%s\n",routeP->routeID, routeP->name, routeP->siteNums, routeP->miles, routeP->period, routeP->startSite, routeP->endSite, routeP->adminName, routeP->tel, routeP->mTel, routeP->email);
         routeP = routeP->next;
     }
 
@@ -1122,10 +1128,10 @@ void makeCsv(route * routeHeadP){
     routeP = routeHeadP;
     while (routeP != NULL){
         site * siteP = routeP->firstSite;
-        fprintf(saveF, "\n ,路线%s 的站点信息：\n", routeP->routeID);
-        fprintf(saveF, " ,固定配送路线编号,序号,编号,名称,与起始站点距离,与上一个站点距离,与上一个站点交通耗时,停留耗时,经过本站点固定路线编号\n");
+        fprintf(saveF, "\n·,路线%s 的站点信息：\n", routeP->routeID);
+        fprintf(saveF, "·,固定配送路线编号,序号,编号,名称,与起始站点距离,与上一个站点距离,与上一个站点交通耗时,停留耗时,经过本站点固定路线编号\n");
         while (siteP != NULL){
-            fprintf(saveF, " ,%s,%d,%s,%s,%f,%f,%f,%f,%s\n",siteP->routeID,siteP->siteSID, siteP->siteID, siteP->siteName, siteP->d2Start, siteP->d2Last, siteP->time2Last, siteP->waitTime, siteP->routeIDArray);
+            fprintf(saveF, "·,%s,%d,%s,%s,%f,%f,%f,%f,%s\n",siteP->routeID,siteP->siteSID, siteP->siteID, siteP->siteName, siteP->d2Start, siteP->d2Last, siteP->time2Last, siteP->waitTime, siteP->routeIDArray);
             siteP = siteP->next;
         }
         routeP = routeP->next;
@@ -1137,13 +1143,13 @@ void makeCsv(route * routeHeadP){
         site * siteP = routeP->firstSite;
         while (siteP != NULL){
             car * carP = siteP->carHeadP;
-            fprintf(saveF, "\n ,站点%s 的车辆信息：\n", siteP->siteID);
-            fprintf(saveF, " ,车辆牌照,执行配送路线编号,司机姓名,司机移动电话,载货种类,载货容量,卸货种类,卸货容量\n");
+            fprintf(saveF, "\n·,站点%s 的车辆信息：\n", siteP->siteID);
+            fprintf(saveF, "·,车辆牌照,执行配送路线编号,司机姓名,司机移动电话,载货种类,载货容量,卸货种类,卸货容量\n");
             while (carP != NULL){
-                fprintf(saveF, " ,%s,%s,%s,%s", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
+                fprintf(saveF, "·,%s,%s,%s,%s", carP->carID, carP->routeID, carP->driverName, carP->driverTel);
                 good * goodP = carP->good;
                 if (goodP != NULL){
-                    fprintf(saveF, " ,%s,%f,%s,%f", goodP->uploadType, goodP->upVolume, goodP->downloadType, goodP->downVolume);
+                    fprintf(saveF, "·,%s,%f,%s,%f", goodP->uploadType, goodP->upVolume, goodP->downloadType, goodP->downVolume);
                 }
                 fprintf(saveF, "\n");
                 carP = carP->next;
@@ -1155,14 +1161,14 @@ void makeCsv(route * routeHeadP){
 
     fprintf(saveF, "\n\n统计信息：\n\n");
 
-    fprintf(saveF, " ,路线总数：,%d\n",sizeRouteList(routeHeadP));
+    fprintf(saveF, "·,路线总数：,%d\n",sizeRouteList(routeHeadP));
 
     int sitesCount = 0;routeP = routeHeadP;
     while(routeP != NULL){
         sitesCount = sitesCount + sizeSiteList(routeP->firstSite);
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,站点总数：,%d\n", sitesCount);
+    fprintf(saveF, "·,站点总数：,%d\n", sitesCount);
 
     int carsCount = 0;routeP = routeHeadP;
     while (routeP != NULL){
@@ -1173,7 +1179,7 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,车辆总数：,%d\n\n", carsCount);
+    fprintf(saveF, "·,车辆总数：,%d\n\n", carsCount);
 
     //计算里程逻辑
     float mileSum = 0;routeP = routeHeadP;
@@ -1181,8 +1187,8 @@ void makeCsv(route * routeHeadP){
         mileSum = mileSum + routeP->miles;
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,路线总里程：,%.4f\n", mileSum);
-    fprintf(saveF, " ,路线平均里程：,%.4f\n", mileSum/sizeRouteList(routeHeadP));
+    fprintf(saveF, "·,路线总里程：,%.4f\n", mileSum);
+    fprintf(saveF, "·,路线平均里程：,%.4f\n", mileSum/sizeRouteList(routeHeadP));
 
     char StringTemp[50];
     float tempFloat = -1;
@@ -1194,7 +1200,7 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,最长里程数：,%.4f,路线%s\n", tempFloat, StringTemp);
+    fprintf(saveF, "·,最长里程数：,%.4f,路线%s\n", tempFloat, StringTemp);
 
     tempFloat = 99999;routeP = routeHeadP;
     while (routeP != NULL){
@@ -1204,7 +1210,7 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,最短里程数：,%.4f,路线%s\n\n", tempFloat, StringTemp);
+    fprintf(saveF, "·,最短里程数：,%.4f,路线%s\n\n", tempFloat, StringTemp);
 
     //计算耗时逻辑
     tempFloat = -1;routeP = routeHeadP;
@@ -1216,7 +1222,7 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,最长耗时：,%.4f,路线%s\n", tempFloat, StringTemp);
+    fprintf(saveF, "·,最长耗时：,%.4f,路线%s\n", tempFloat, StringTemp);
 
     tempFloat = 99999;routeP = routeHeadP;
     while (routeP != NULL){
@@ -1227,14 +1233,14 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,最短耗时：,%.4f,路线%s\n", tempFloat, StringTemp);
+    fprintf(saveF, "·,最短耗时：,%.4f,路线%s\n", tempFloat, StringTemp);
 
     tempFloat = 0;routeP = routeHeadP;
     while (routeP != NULL){
         tempFloat = tempFloat + totalTime(routeP);
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,平均耗时：,%.4f\n\n", tempFloat/sizeRouteList(routeHeadP));
+    fprintf(saveF, "·,平均耗时：,%.4f\n\n", tempFloat/sizeRouteList(routeHeadP));
 
 
     //统计载货量逻辑
@@ -1275,16 +1281,16 @@ void makeCsv(route * routeHeadP){
         }
         routeP = routeP->next;
     }
-    fprintf(saveF, " ,总载货量：,%.4f\n", tempFloat);
-    fprintf(saveF, " ,平均载货量：,%.4f\n", tempFloat/carsCount);
-    fprintf(saveF, " ,最大载货量：,%.4f,%s\n", maxCarry, maxCarID);
-    fprintf(saveF, " ,最小载货量：,%.4f,%s\n\n", minCarry, minCarID);
+    fprintf(saveF, "·,总载货量：,%.4f\n", tempFloat);
+    fprintf(saveF, "·,平均载货量：,%.4f\n", tempFloat/carsCount);
+    fprintf(saveF, "·,最大载货量：,%.4f,%s\n", maxCarry, maxCarID);
+    fprintf(saveF, "·,最小载货量：,%.4f,%s\n\n", minCarry, minCarID);
 
     //计算配送效率逻辑
-    fprintf(saveF, " ,平均配送效率：,%.4f\n", tempFloat/mileSum);
-    fprintf(saveF, " ,最高配送效率：,%.4f,%s\n", maxEfficiency, maxCarID2);
-    fprintf(saveF, " ,最低配送效率：,%.4f,%s\n", minEfficiency, minCarID2);
-    fprintf(saveF, " ,PS:配送效率指载货量与配送时间之比\n");
+    fprintf(saveF, "·,平均配送效率：,%.4f\n", tempFloat/mileSum);
+    fprintf(saveF, "·,最高配送效率：,%.4f,%s\n", maxEfficiency, maxCarID2);
+    fprintf(saveF, "·,最低配送效率：,%.4f,%s\n", minEfficiency, minCarID2);
+    fprintf(saveF, "·,PS:配送效率指载货量与配送时间之比\n");
 
     fclose(saveF);
     MessageBox(NULL, TEXT("报表已经保存在程序的根目录。"), TEXT("操作成功"), MB_OK);
@@ -1348,6 +1354,11 @@ void updateAlld2S(site * siteP){//
         sitePre = siteNext;
         siteNext = siteNext->next;
     }
+}
+
+void saveALL(route* routeHeadP){
+    FILE * fRoutes = fopen("save/routes.data","w");
+    FILE * f
 }
 
 void LocSubMenu(int num, SMALL_RECT *rc){
