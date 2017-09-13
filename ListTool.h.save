@@ -6,64 +6,58 @@
 /* CURD for routes */
 
 /* 创建储存路线数据的线性表*/
-//返回头结点
 route *creatRouteList(FILE* fText) {
+	if (feof(fText)) {
+		return NULL;
+	}
 	route *routeP, *pReturn;
 
 	//set the first node (of course this is not an elagent way to realize
 	routeP = (route *)malloc(sizeof(route));
-//	char StrLine[200];
-//	fgets(StrLine, 200, fText);
-//	char ** info = readRoute(StrLine);
-//	if (info == NULL){//第一行就是空行
-//        return NULL;
-//    }
-//	strcpy(routeP->routeID, info[0]);
-//	strcpy(routeP->name, info[1]);
-//	routeP->siteNums = atoi(info[2]);
-//	routeP->miles = (float)atof(info[3]);
-//	routeP->period = (float)atof(info[4]);
-//	strcpy(routeP->startSite, info[5]);
-//	strcpy(routeP->endSite, info[6]);
-//	strcpy(routeP->adminName, info[7]);
-//	strcpy(routeP->tel, info[8]);
-//	strcpy(routeP->mTel, info[9]);
-//	strcpy(routeP->email, info[10]);
-//	freeDoubleCharArray(11, info);//deeply free
-    fread(routeP, sizeof(route), 1, fText);
-    if (feof(fText)) {
-		return NULL;
-	}
+	char StrLine[200];
+	fgets(StrLine, 200, fText);
+	char ** info = readRoute(StrLine);
+	if (info == NULL){//第一行就是空行
+        return NULL;
+    }
+	strcpy(routeP->routeID, info[0]);
+	strcpy(routeP->name, info[1]);
+	routeP->siteNums = atoi(info[2]);
+	routeP->miles = (float)atof(info[3]);
+	routeP->period = (float)atof(info[4]);
+	strcpy(routeP->startSite, info[5]);
+	strcpy(routeP->endSite, info[6]);
+	strcpy(routeP->adminName, info[7]);
+	strcpy(routeP->tel, info[8]);
+	strcpy(routeP->mTel, info[9]);
+	strcpy(routeP->email, info[10]);
+	freeDoubleCharArray(11, info);//deeply free
 	routeP->next = NULL;
-	routeP->firstSite = NULL;
 	pReturn = routeP;
 
 	//read other route info from text
 	while (1) {
 		route * tempP = (route *)malloc(sizeof(route));
-        fread(tempP, sizeof(route), 1, fText);
-		tempP->firstSite = NULL;
-
-//		char StrLine[200];
-//		fgets(StrLine, 200, fText);
+		char StrLine[200];
+		fgets(StrLine, 200, fText);
 		if (feof(fText)) {
 			free(tempP);
 			break;
 		}
-//		char ** info = readRoute(StrLine);
-//
-//		strcpy(tempP->routeID, info[0]);
-//		strcpy(tempP->name, info[1]);
-//		tempP->siteNums = atoi(info[2]);
-//		tempP->miles = (float) atof(info[3]);
-//		tempP->period = (float)atof(info[4]);
-//		strcpy(tempP->startSite, info[5]);
-//		strcpy(tempP->endSite, info[6]);
-//		strcpy(tempP->adminName, info[7]);
-//		strcpy(tempP->tel, info[8]);
-//		strcpy(tempP->mTel, info[9]);
-//		strcpy(tempP->email, info[10]);
-//		freeDoubleCharArray(11, info);//deeply free
+		char ** info = readRoute(StrLine);
+
+		strcpy(tempP->routeID, info[0]);
+		strcpy(tempP->name, info[1]);
+		tempP->siteNums = atoi(info[2]);
+		tempP->miles = (float) atof(info[3]);
+		tempP->period = (float)atof(info[4]);
+		strcpy(tempP->startSite, info[5]);
+		strcpy(tempP->endSite, info[6]);
+		strcpy(tempP->adminName, info[7]);
+		strcpy(tempP->tel, info[8]);
+		strcpy(tempP->mTel, info[9]);
+		strcpy(tempP->email, info[10]);
+		freeDoubleCharArray(11, info);//deeply free
 
 		routeP->next = tempP;
 		routeP = tempP;
@@ -80,53 +74,47 @@ site * creatSiteList(FILE* fText) {
 
 	//set the first node (of course this is not an elagent way to realize this method
 	siteP = (site *)malloc(sizeof(site));
-//	char StrLine[200];
-//	fgets(StrLine, 200, fText);
-//	char ** info = readRoute(StrLine);
-//	if (info == NULL){//第一行就是空行
-//        return NULL;
-//    }
-    fread(siteP, sizeof(site), 1, fText);
-    if(feof(fText)){
+	char StrLine[200];
+	fgets(StrLine, 200, fText);
+	char ** info = readRoute(StrLine);
+	if (info == NULL){//第一行就是空行
         return NULL;
     }
-    siteP->carHeadP = NULL;
-//	strcpy(siteP->routeID, info[0]);
-//	siteP->siteSID = atoi(info[1]);
-//	strcpy(siteP->siteID, info[2]);
-//	strcpy(siteP->siteName, info[3]);
-//	siteP->d2Start = atof(info[4]);
-//	siteP->d2Last = atof(info[5]);
-//	siteP->time2Last = atof(info[6]);
-//	siteP->waitTime = atof(info[7]);
-//	strcpy(siteP->routeIDArray, info[8]);
-//	freeDoubleCharArray(9, info);
+	strcpy(siteP->routeID, info[0]);
+	siteP->siteSID = atoi(info[1]);
+	strcpy(siteP->siteID, info[2]);
+	strcpy(siteP->siteName, info[3]);
+	siteP->d2Start = atof(info[4]);
+	siteP->d2Last = atof(info[5]);
+	siteP->time2Last = atof(info[6]);
+	siteP->waitTime = atof(info[7]);
+	strcpy(siteP->routeIDArray, info[8]);
+	freeDoubleCharArray(9, info);
 	siteP->next = NULL;
 	pReturn = siteP;
 
 	//read other site info from text
 	while (1) {
 		site * tempP = (site *)malloc(sizeof(site));
-        fread(tempP, sizeof(site), 1, fText);
-//		char StrLine[200];
-//		fgets(StrLine, 200, fText);
+
+		char StrLine[200];
+		fgets(StrLine, 200, fText);
 		if (feof(fText)) {
 			free(tempP);
 			break;
 		}
-		tempP->carHeadP = NULL;
-//		char ** info = readRoute(StrLine);//进行字符串切分操作
-//
-//		strcpy(tempP->routeID, info[0]);
-//		tempP->siteSID = atoi(info[1]);
-//		strcpy(tempP->siteID, info[2]);
-//		strcpy(tempP->siteName, info[3]);
-//		tempP->d2Start = atof(info[4]);
-//		tempP->d2Last = atof(info[5]);
-//		tempP->time2Last = atof(info[6]);
-//		tempP->waitTime = atof(info[7]);
-//		strcpy(tempP->routeIDArray, info[8]);
-//		freeDoubleCharArray(9, info);
+		char ** info = readRoute(StrLine);//进行字符串切分操作
+
+		strcpy(tempP->routeID, info[0]);
+		tempP->siteSID = atoi(info[1]);
+		strcpy(tempP->siteID, info[2]);
+		strcpy(tempP->siteName, info[3]);
+		tempP->d2Start = atof(info[4]);
+		tempP->d2Last = atof(info[5]);
+		tempP->time2Last = atof(info[6]);
+		tempP->waitTime = atof(info[7]);
+		strcpy(tempP->routeIDArray, info[8]);
+		freeDoubleCharArray(9, info);
 
 		siteP->next = tempP;
 		siteP = tempP;
@@ -134,35 +122,24 @@ site * creatSiteList(FILE* fText) {
 	}
 	return pReturn;
 }
-//返回带有货物信息的车辆链表（因为共存于同一个二进制文件中，无法拆分
 car * creatCarList(FILE * fText) {
 
 	car *carP, *pReturn;
 
 	//set the first node (of course this is not an elagent way to realize this method
 	carP = (car *)malloc(sizeof(car));
-	fread(carP, sizeof(car), 1, fText);
-//	char StrLine[200];
-//	StrLine[0] = '\0';
-//	fgets(StrLine, 200, fText);
-//	char ** info = readCar(StrLine);
-//    if (info == NULL){//第一行就是空行
-//        return NULL;
-//    }
-    if (feof(fText)) {
-		return NULL;
-	}
-    if (carP->good != NULL){
-        good * goodP = (good*)malloc(sizeof(good));
-        fread(goodP, sizeof(good), 1, fText);
-        carP-
+	char StrLine[200];
+	StrLine[0] = '\0';
+	fgets(StrLine, 200, fText);
+	char ** info = readCar(StrLine);
+    if (info == NULL){//第一行就是空行
+        return NULL;
     }
-
-//	strcpy(carP->carID, info[0]);
-//	strcpy(carP->routeID, info[1]);
-//	strcpy(carP->driverName, info[2]);
-//	strcpy(carP->driverTel, info[3]);
-//	freeDoubleCharArray(4, info);
+	strcpy(carP->carID, info[0]);
+	strcpy(carP->routeID, info[1]);
+	strcpy(carP->driverName, info[2]);
+	strcpy(carP->driverTel, info[3]);
+	freeDoubleCharArray(4, info);
 
 	carP->next = NULL;
 	pReturn = carP;
@@ -170,25 +147,20 @@ car * creatCarList(FILE * fText) {
 	//read other site info from text
 	while (1) {
 		car * tempP = (car *)malloc(sizeof(car));
-        fread(tempP, sizeof(car), 1, fText);
 
-//		char StrLine[200];
-//		fgets(StrLine, 200, fText);
+		char StrLine[200];
+		fgets(StrLine, 200, fText);
 		if (feof(fText)) {
 			free(tempP);
 			break;
 		}
-		if (tempP->good != NULL){
-		    g
-		}
-		tempP->good = NULL;
-//		char ** info = readCar(StrLine);//进行字符串切分操作
-//
-//		strcpy(tempP->carID, info[0]);
-//		strcpy(tempP->routeID, info[1]);
-//		strcpy(tempP->driverName, info[2]);
-//		strcpy(tempP->driverTel, info[3]);
-//		freeDoubleCharArray(4, info);
+		char ** info = readCar(StrLine);//进行字符串切分操作
+
+		strcpy(tempP->carID, info[0]);
+		strcpy(tempP->routeID, info[1]);
+		strcpy(tempP->driverName, info[2]);
+		strcpy(tempP->driverTel, info[3]);
+		freeDoubleCharArray(4, info);
 
 		carP->next = tempP;
 		carP = tempP;
@@ -211,6 +183,11 @@ good* creatGood(FILE * fText) {
 	freeDoubleCharArray(4, info);
 
 	return goodP;
+}
+
+/* 打印链表，链表的遍历，TODO：需要做格式化，需要深度遍历(报表？？)*/
+void printList(route *pHead) {
+	// TODO
 }
 
 /* 返回链表的长度*/
@@ -410,7 +387,8 @@ void deeplyFreeRoute(route * routeP){
             free(carP);
             carP = carPp;
         }
-        free(siteP);
+        free
+
         siteP = sitePp;
     }
 }
@@ -505,12 +483,12 @@ car* DelCarPos(car *HeadP, int pos) {
 	}
 	if (i == 0) {//即删除头结点
 		car * returnP = pHead->next;//返回第二个结点
-		free(pHead->good);
+		free(pHead->good)
 		free(pHead);
 		return returnP;
 	}
 	pTmp->next = pHead->next;
-	free(pHead->good);
+	free(pHead->good)
 	free(pHead);
 	return HeadP;
 }

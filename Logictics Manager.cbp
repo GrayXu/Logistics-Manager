@@ -14,7 +14,6 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="D:/Workplace/C/Logistics-Manager" />
-					<Add directory="D:/workspace/Logistics-Manager" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -33,6 +32,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="D:/迅雷下载/Logistics-Manager-4fd0fe79dc027b1b5bf2400000107d14b88418f1" />
 		</Compiler>
 		<Unit filename="DataStructure.h" />
 		<Unit filename="ListTool.h" />
