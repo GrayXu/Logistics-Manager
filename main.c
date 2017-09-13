@@ -47,6 +47,7 @@ float getMile(char *routeIDThis, route * routeHeadP);
 float totalMile(route *routeP);
 void updateAlld2S(site * siteP);
 
+
 void LocSubMenu(int num, SMALL_RECT *rc);
 
 void saveALL(route* routeHeadP);
@@ -123,6 +124,7 @@ int main() {
 			}
 		} else if (input1 == 2) {
 			printPowerBy();
+			saveALL(routeHeadP);
 			continue;
 		} else {
 			system("cls");
@@ -246,6 +248,7 @@ void quickQuery(route * routeHeadP){
             }
             routeP = routeP->next;
         }
+
 	    break;
     case 5:
         tempFloat = -1;
@@ -307,7 +310,6 @@ void quickQuery(route * routeHeadP){
 
 //初始化控制台，进行一些个性化设置
 void initConsole(){
-//    HWND hwnd=GetForegroundWindow();
     system("mode con:cols=175 lines=30");
     system("color 3B");
     SetConsoleTitle("物流信息管理系统");
@@ -315,25 +317,25 @@ void initConsole(){
 
 /*初始化数据，读取存档*/
 route * initData() {
-	FILE *fRouteP = fopen("save/routes.txt", "r");
+//	FILE *fRouteP = fopen("save/routes.txt", "r");
+	FILE *fRouteP = fopen("save/routes", "r");
 	route * routeHeadP = NULL;
 	if (fRouteP == NULL) {
-	    printf ("initData error.");
+	    printf ("initData occurs en error in fopen method.");
 		return NULL;
 	} else {
 		//test
 		routeHeadP = creatRouteList(fRouteP);
 		fclose(fRouteP);
-		char *url = malloc(sizeof(char) * 20);
+		char url[20];//储存存档文件路径的缓存
 		register int i = 0;
 		register int j = 0;
-		register int k = 0;
 		for (i = 0; i < sizeRouteList(routeHeadP); i++) {
 			route *routeP = getRoutePointer(routeHeadP,i);
 			strcpy(url, "save/");
 			strcat(url, routeP->routeID);
-			strcat(url, ".txt");
-			FILE *fSite = fopen(url, "r+");
+//			strcat(url, ".txt");//comment:修改为读取二进制内容
+			FILE *fSite = fopen(url, "r");
 			if (fSite == NULL) {
 				routeP->firstSite = NULL;
 				continue;
@@ -346,29 +348,29 @@ route * initData() {
 			for (j = 0; j < sizeSiteList(siteHeadP); j++) {
 				site * siteP = getSitePointer(siteHeadP, j);
 				strcpy(url, "save/");
-				strcat(url, siteP->siteID);
-				strcat(url, ".txt");
-				FILE * fCar = fopen(url, "r+");
+				strcat(url, siteP->siteID);//这个站点下的所有汽车
+//				strcat(url, ".txt");
+				FILE * fCar = fopen(url, "r");
 				if (fCar == NULL) {
 					siteP->carHeadP = NULL;
-					continue;//连车的存档都没有，更别说货物了
+					continue;
 				}
-				car * carHeadP = creatCarList(fCar);
+				car * carHeadP = creatCarList(fCar);//连带货物信息一起创建了这个车辆链表
 				siteP->carHeadP = carHeadP;
 
-				for (k = 0; k < sizeCarList(carHeadP); k++) {
-					car * carP = getCarPointer(carHeadP, k);
-					strcpy(url, "save/");
-					strcat(url, carP->carID);
-					strcat(url, ".txt");
-					FILE * fGood = fopen(url, "r+");
-					if (fGood == NULL) {
-						carP->good = NULL;
-						continue;
-					}
-					carP->good = creatGood(fGood);
-					fclose(fGood);
-				}
+//				for (k = 0; k < sizeCarList(carHeadP); k++) {
+//					car * carP = getCarPointer(carHeadP, k);
+//					strcpy(url, "save/");
+//					strcat(url, carP->carID);
+////					strcat(url, ".txt");
+//					FILE * fGood = fopen(url, "r");
+//					if (fGood == NULL) {
+//						carP->good = NULL;
+//						continue;
+//					}
+//					carP->good = creatGood(fGood);
+//					fclose(fGood);
+//				}
 				fclose(fCar);
 			}
 			fclose(fSite);
@@ -1356,23 +1358,46 @@ void updateAlld2S(site * siteP){//
     }
 }
 
+/**
+* 存档，二进制形式，多文件进行提速
+*/
 void saveALL(route* routeHeadP){
-    FILE * fRoutes = fopen("save/routes.data","w");
-    FILE * fSites = fopen("save/sites.data", "w");
-    FILE * fCars = fopen("save/cars,data", "w");
+    FILE * fRoutes = fopen("save/routes","w");
+    route * routeP = routeHeadP;
+    while (routeP != NULL){//所有路线数据
+        fwrite(routeP, sizeof(route), 1, fRoutes);
+        site * siteP = routeP->firstSite;
 
+        char sitesFileURL[20];
+        strcpy(sitesFileURL, "save/");
+        strcat(sitesFileURL, routeP->routeID);
+        FILE * fSites = fopen(sitesFileURL, "w");
 
+        while (siteP != NULL){//某路线下所有站点数据
+            fwrite(siteP, sizeof(site), 1, fSites);
+            car * carP = siteP->carHeadP;
 
+            char carsFileURL[20];
+            strcpy(carsFileURL, "save/");
+            strcat(carsFileURL, siteP->siteID);
+            FILE * fCars = fopen(carsFileURL, "w");
+            while (carP != NULL){//某站点下所有车辆信息（包括了货物信息）
+                fwrite(carP, sizeof(car), 1, fCars);
+                if (carP->good){
+                    fwrite(carP->good, sizeof(good), 1, fCars);
+                }
+                carP = carP->next;
+            }
 
+            fclose(fCars);
+            siteP = siteP->next;
+        }
 
-
-
-
-
+        fclose(fSites);
+        routeP = routeP->next;
+    }
 
     fclose(fRoutes);
-    fclose(fSites);
-    fclose(fCars);
 }
 
 void LocSubMenu(int num, SMALL_RECT *rc){
