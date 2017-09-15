@@ -8,10 +8,6 @@
 #include "shlobj.h"
 #include <wingdi.h>
 
-//TODO: 报告
-
-int selectRow = 1;
-
 route * initData();
 void printSomeSpace(int num);
 void printSomeG(int num);
@@ -25,7 +21,7 @@ void quickQuery(route * routeHeadP);
 
 void addRoute(route * routeHeadP);
 car* addCar(car * carHeadP);
-site* addSite(site * siteHeadP, char* routeIDIN);
+site* addSite(site * siteHeadP, char* routeIDIN, route * routeHeadP);
 
 int changeSite(site * siteSpecific, int notFirst, site * siteHeadP);
 int changeRoute(route * routeSpecial);
@@ -47,10 +43,7 @@ float getMile(char *routeIDThis, route * routeHeadP);
 float totalMile(route *routeP);
 void updateAlld2S(site * siteP);
 
-void LocSubMenu(int num, SMALL_RECT *rc);
-
-void saveALL(route* routeHeadP);
-
+//主函数，
 int main() {
 
 	route* routeHeadP;
@@ -243,6 +236,7 @@ void quickQuery(route * routeHeadP){
                     routeP = NULL;//jump out from loops
                     goto l1;
                 }
+                siteP = siteP->next;
             }
             routeP = routeP->next;
         }
@@ -251,7 +245,7 @@ void quickQuery(route * routeHeadP){
         tempFloat = -1;
         while (routeP != NULL){
             if (routeP->period > tempFloat){
-                tempFloat = routeP->miles;
+                tempFloat = routeP->period;
                 strcpy(input, routeP->routeID);
                 isSuccessful = 1;
             }
@@ -262,8 +256,8 @@ void quickQuery(route * routeHeadP){
     case 6:
         tempFloat = 99999;
         while (routeP != NULL){
-            if (routeP->period > tempFloat){
-                tempFloat = routeP->miles;
+            if (routeP->period < tempFloat){
+                tempFloat = routeP->period;
                 strcpy(input, routeP->routeID);
                 isSuccessful = 1;
             }
@@ -506,14 +500,9 @@ void addRoute(route * routeHeadP) {
 
 		newRouteP->siteNums = 0;//auto complete siteConut. default -> 0;
 
-		printSomeSpace(60);printf("请输入总公里数:");
-		float fMiles = 0;
-		scanf("%f%*c", &fMiles);
-		newRouteP->miles = fMiles;
-		printSomeSpace(60);printf("请输入总耗时:");
-		float fPeriod = 0;
-		scanf("%f%*c", &fPeriod);
-		newRouteP->period = fPeriod;
+		newRouteP->miles = 0;
+		newRouteP->period = 0;
+
 		printSomeSpace(60);printf("请输入起始站点编号:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newRouteP->startSite, inputTemp);
@@ -537,7 +526,7 @@ void addRoute(route * routeHeadP) {
 		printf("addRoute error\n");
 	}
 }
-site* addSite(site * siteHeadP, char* routeIDIN){
+site* addSite(site * siteHeadP, char* routeIDIN, route * routeHeadP){
     printf("---------------请输入新站点的信息----------------\n");
 	printSomeSpace(60);printf("请输入新站点在路线中的序号:");//新站点的位置
 	int seq = 0; scanf("%d%*c", &seq);
@@ -558,11 +547,22 @@ site* addSite(site * siteHeadP, char* routeIDIN){
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newSiteP->siteID, inputTemp);
 
+        //检测是否站点重复
+        route * routeP = routeHeadP;
+        while(routeP != NULL){
+            site * siteP = routeP->firstSite;
+            while(siteP != NULL){
+                if(!strcmp(siteP->siteID, newSiteP->siteID)){//一样
+                    newSiteP->carHeadP = siteP->carHeadP;
+                }
+                siteP = siteP->next;
+            }
+            routeP = routeP->next;
+        }
+
 		printSomeSpace(60);printf("请输入站点名称:");
 		noNfgets(inputTemp, 50, stdin);
 		strcpy(newSiteP->siteName, inputTemp);
-
-
 
 		printSomeSpace(60);printf("请输入与上一个站点交通耗时:");
 		float fPeriod = 0;
@@ -595,6 +595,7 @@ site* addSite(site * siteHeadP, char* routeIDIN){
         }
         //自动更新其他站点的离起始站点距离
         updateAlld2S(newSiteP);
+
 
         //自动补全序号
         newSiteP->siteSID = seq;
@@ -878,7 +879,7 @@ void printSitePage(route *routeP, route * routeHeadP) {
 		system("cls");
 		site* siteP = siteHeadP;
 		system("date /T");
-		printSomeG(71);printf("路线编号：%6s 的所有站点信息", siteHeadP->routeID);printSomeG(71);printf("\n");//title
+		printSomeG(71);printf("路线编号：%6s 的所有站点信息", routeP->routeID);printSomeG(71);printf("\n");//title
 
 		char second[] = "序号";
 		char third[] = "站点编号";
@@ -934,13 +935,12 @@ void printSitePage(route *routeP, route * routeHeadP) {
 			printf("想删除第几个站点的信息:");
 			scanf("%d%*c", &seq);
 			siteHeadP = DelSitePos(siteHeadP, seq - 1);//get the new site head pointer
+			routeP->firstSite = siteHeadP;
 			//自动改变上文
 			if (seq == 1) {//删除了第一个
 				strcpy(routeP->startSite, siteHeadP->siteID);//更新上一级存储的第一站点名称数据
-				updateRoutesFILE(routeP);
 			} else if (seq == (sizeSiteList(siteHeadP)-2)) {//删除了最后一个
 				strcpy(routeP->endSite, getSitePointer(siteHeadP, sizeSiteList(siteHeadP) - 1)->siteID);//更新上一级存储的终点站点名称数据
-				updateRoutesFILE(routeP);
 			}
 			//自动更新序号
 			site * stepSite = getSitePointer(siteHeadP, seq - 1);
@@ -952,11 +952,13 @@ void printSitePage(route *routeP, route * routeHeadP) {
 
 			//更新路线站点数信息至链表与存档
 			updateSitesCount(routeP);
-            updateRoutesFILE(routeHeadP);
             routeP->period = totalTime(routeP);
 
             //更新路线距离
             routeP->miles = totalMile(routeP);
+
+            //更新D2S
+            updateAlld2S(siteHeadP);
 
             updateRoutesFILE(routeHeadP);//update save file
 			//TODO: 不方便删除站点数据，应筛选是否有被其他路线占用
@@ -965,7 +967,8 @@ void printSitePage(route *routeP, route * routeHeadP) {
 			break;
 		case 4:
 			//增添逻辑
-			siteHeadP = addSite(siteHeadP, routeP->routeID);
+			siteHeadP = addSite(siteHeadP, routeP->routeID, routeHeadP);
+			routeP->firstSite = siteHeadP;
 			updateSitesFILE(siteHeadP);
 
 			//更新路线站点数信息至链表与存档
@@ -974,9 +977,16 @@ void printSitePage(route *routeP, route * routeHeadP) {
 
             //更新路线距离
             routeP->miles = totalMile(routeP);
+            //更新上级路线的起始站点末尾站点信息
+            site * siteTempP = siteHeadP;
+            strcpy(routeP->startSite, siteHeadP->siteID);
+            while(siteTempP->next != NULL){
+                siteTempP = siteTempP->next;
+            }
+            strcpy(routeP->endSite, siteTempP->routeID);
 
             updateRoutesFILE(routeHeadP);
-			MessageBox(NULL, TEXT("成功增添站点\n建议继续进入该站点详细信息界面添加站点信息"), TEXT("操作成功"), MB_OK);
+			MessageBox(NULL, TEXT("成功增添站点"), TEXT("操作成功"), MB_OK);
 
 			break;
 		case 5:
@@ -1354,36 +1364,4 @@ void updateAlld2S(site * siteP){//
         sitePre = siteNext;
         siteNext = siteNext->next;
     }
-}
-
-void saveALL(route* routeHeadP){
-    FILE * fRoutes = fopen("save/routes.data","w");
-    FILE * f
-}
-
-void LocSubMenu(int num, SMALL_RECT *rc){
-//    int i, len, loc = 0;
-//
-//    rc->Top = 1; /*区域的上边定在第2行，行号为1*/
-//    rc->Left = 1;
-//    for (i=1; i<num; i++){   /*计算区域左边界位置, 同时计算第一个子菜单项在子菜单字符串数组中的位置*/
-//        rc->Left += strlen(ga_main_menu[i-1]) + 4;
-//        loc += ga_sub_menu_count[i-1];
-//    }
-//    rc->Right = strlen(ga_sub_menu[loc]);/*暂时存放第一个子菜单项字符串长度*/
-//
-//    for (i=1; i<ga_sub_menu_count[num-1]; i++){   /*查找最长子菜单字符串，将其长度存放在rc->Right*/
-//        len = strlen(ga_sub_menu[loc+i]);
-//        if (rc->Right < len)
-//        {
-//            rc->Right = len;
-//        }
-//    }
-//    rc->Right += rc->Left + 3;  /*计算区域的右边界*/
-//    rc->Bottom = rc->Top + ga_sub_menu_count[num-1] + 1;/*计算区域下边的行号*/
-//    if (rc->Right >= SCR_COL){  /*右边界越界的处理*/
-//        len = rc->Right - SCR_COL + 1;
-//        rc->Left -= len;
-//        rc->Right = SCR_COL - 1;
-//    }
 }

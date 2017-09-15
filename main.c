@@ -8,8 +8,6 @@
 #include "shlobj.h"
 #include <wingdi.h>
 
-//TODO: 报告
-
 route * initData();
 void printSomeSpace(int num);
 void printSomeG(int num);
@@ -45,6 +43,7 @@ float getMile(char *routeIDThis, route * routeHeadP);
 float totalMile(route *routeP);
 void updateAlld2S(site * siteP);
 
+//主函数，同时展示主界面
 int main() {
 
 	route* routeHeadP;
