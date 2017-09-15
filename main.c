@@ -10,8 +10,6 @@
 
 //TODO: ±¨¸æ
 
-int selectRow = 1;
-
 route * initData();
 void printSomeSpace(int num);
 void printSomeG(int num);
@@ -46,10 +44,6 @@ float totalTime(route *routeP);
 float getMile(char *routeIDThis, route * routeHeadP);
 float totalMile(route *routeP);
 void updateAlld2S(site * siteP);
-
-void LocSubMenu(int num, SMALL_RECT *rc);
-
-void saveALL(route* routeHeadP);
 
 int main() {
 

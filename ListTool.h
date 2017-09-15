@@ -315,9 +315,6 @@ site * AddSiteNode(site *HEAD, int pos) {
 	if (pPre == NULL) {
 		return NULL;
 	}
-	if (NULL == pHead) {
-		return NULL;
-	}
 
 	if (pos == 0) {//add to be the first one
 		pNew->next = HEAD;

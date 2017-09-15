@@ -277,7 +277,7 @@ route* AddRouteNode(route *HEAD, int pos) {
 	route *pNew = NULL;
 	int i = 0;
 	pNew = (route *)malloc(sizeof(route));
-
+    
 	if (pPre == NULL) {
 		return NULL;
 	}
@@ -387,8 +387,7 @@ void deeplyFreeRoute(route * routeP){
             free(carP);
             carP = carPp;
         }
-        free
-
+        free(siteP);
         siteP = sitePp;
     }
 }
@@ -483,12 +482,12 @@ car* DelCarPos(car *HeadP, int pos) {
 	}
 	if (i == 0) {//即删除头结点
 		car * returnP = pHead->next;//返回第二个结点
-		free(pHead->good)
+		free(pHead->good);
 		free(pHead);
 		return returnP;
 	}
 	pTmp->next = pHead->next;
-	free(pHead->good)
+	free(pHead->good);
 	free(pHead);
 	return HeadP;
 }
